@@ -1,0 +1,46 @@
+.background {
+    background: linear-gradient(to right, rgb(251, 113, 133), rgb(217, 70, 239), rgb(99, 102, 241));
+	background-size: 400% 400%;
+	animation: gradient 15s ease infinite;
+	height: 35vh; 
+    margin-top: 100px;
+    position: relative;
+    bottom: 0px
+}
+@keyframes gradient {
+    0% {
+        background-position: 0% 50%;
+    }
+    50% {
+        background-position: 100% 50%;
+    }
+    100% {
+        background-position: 0% 50%;
+    }
+}
+.copyright {
+    position: absolute;
+    bottom: 5px;
+    width: 100%;
+    text-align: center
+}   
+
+.icons-container {
+    display: flex;
+    position: absolute;
+    width: 100%;
+    bottom: 50px;
+    justify-content: center;
+    color: white;
+    gap: 40px;
+}
+
+.icon {
+    cursor: pointer;
+
+}
+.icon:hover {
+    transition-property: background-color, border-color, color, fill, stroke, opacity, box-shadow, transform; 
+    transition-timing-function: cubic-bezier(0.4, 0.5, 0.2, 1); 
+    transform: scale(1.5,1.5);
+}

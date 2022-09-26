@@ -1,0 +1,28 @@
+body {
+    margin: 0;
+}
+
+::-webkit-scrollbar {
+    width: 5px;
+  }
+  
+::-webkit-scrollbar-thumb {
+    background-color: rgb(208,208,208);
+    border-radius: 40px;
+}
+  
+::-webkit-scrollbar-track {
+    background-color: transparent;
+}
+
+.person {
+    cursor: pointer;
+    display: flex;
+    gap: 15px;
+    padding: 10px;
+    border-radius: 10px
+}
+
+.person:hover {
+    background-color: rgb(232,232,232)
+}
