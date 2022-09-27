@@ -5,7 +5,43 @@ import Navbar from '../components/Navbar'
 import GoogleIcon from '@mui/icons-material/Google';
 import FacebookIcon from '@mui/icons-material/Facebook';
 import Background from '../utils/Background';
+
+import { useDispatch } from 'react-redux';
+import {  signInWithPopup, GoogleAuthProvider } from 'firebase/auth';
+import { auth } from '../firebase';
+import { useNavigate } from 'react-router-dom';
+
 const Login = () => {
+
+    const provider = new GoogleAuthProvider();
+    const dispatch = useDispatch()
+    const navigate = useNavigate()
+
+    const handleSignIn = () => {
+        signInWithPopup(auth, provider)
+        .then((result) => {
+          // This gives you a Google Access Token. You can use it to access the Google API.
+          const credential = GoogleAuthProvider.credentialFromResult(result);
+          const token = credential.accessToken;
+          const user = result.user;
+          if(token)
+          {
+              dispatch({type: 'AUTH_USER', payload: {
+                uid: user.uid,
+                name: user.displayName,
+                image: user.photoURL,
+                }})
+            navigate('/')
+          }
+        }).catch((error) => {
+            // Handle Errors here.
+            const errorCode = error.code;
+            const errorMessage = error.message;
+            const email = error.customData.email;
+            const credential = GoogleAuthProvider.credentialFromError(error);
+        });
+    }
+
   return (
     <div>
         <Navbar/>
@@ -23,7 +59,7 @@ const Login = () => {
                             <b>Message anytime, anywhere</b>
                     </Typography>
                     {/* Mobile display */}
-                    <Typography variant='h4'
+                    <Typography variant='h3'
                         sx={{
                             display: { xs: 'block', sm: 'none' },                            
                             backgroundImage: 'linear-gradient(to right bottom, rgb(236, 72, 153), rgb(239, 68, 68), rgb(234, 179, 8))',
@@ -44,7 +80,9 @@ const Login = () => {
                                         backgroundColor: '#F5FFFA',
                                         borderColor: 'gray'                                     
                                     }
-                                    }}>
+                                    }}
+                                onClick={handleSignIn}
+                                    >
                                         <GoogleIcon style={{color: 'red'}}/>&nbsp;&nbsp;Sign in with Google
                             </Button>
                         </div>

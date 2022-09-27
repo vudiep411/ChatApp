@@ -25,7 +25,7 @@ const ChatField = ({ chatMsg, setChatMsg }) => {
                     </InputAdornment>
                 }
                 endAdornment={
-                    <InputAdornment>
+                    <InputAdornment position="end">
                         {   chatMsg &&
                             <SendIcon 
                                 color='primary'

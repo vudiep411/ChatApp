@@ -2,11 +2,13 @@ import React, { useState } from 'react'
 import { Avatar, Grid, Typography } from '@mui/material'
 import SearchBar from './SearchBar'
 import '../index.css'
+import { userMessages } from '../utils/mockdata'
 
-var data = Array.from({length: 20}, (v, i) => i)
-
+// var data = Array.from({length: 20}, (v, i) => i)
+const data = userMessages
 const SideBar = () => {
   const [searchText, setSearchText] = useState('')
+  const [selectedUid, setSelectedUid] = useState('')
 
   return (
     <Grid sx={{display: {xs : 'none', sm: 'block'}}}>
@@ -21,12 +23,25 @@ const SideBar = () => {
         }}>
             <div style={{ marginTop: '90px', padding: '10px'}}>
               <SearchBar searchText={searchText} setSearchText={setSearchText}/>
-              { data?.map((val) => (
-                <div className='person'>
-                  <Avatar sx={{width: 50, height: 50}}>V</Avatar>
+              { data?.map((val, i) => (
+                <div 
+                  className={selectedUid === val.uid ? 'active-person' : 'person'} 
+                  key={i}
+                  onClick={() => setSelectedUid(val.uid)}
+                >
+                  <Avatar sx={{width: 50, height: 50}} src={val.image}></Avatar>
                   <div>
-                    <Typography>Vu Diep</Typography>
-                    <Typography variant='body2' color='GrayText' style={{overflow: 'hidden', textOverflow: "ellipsis", whiteSpace: 'nowrap', maxWidth: '250px'}}>Hello asdasdas asd as das dasd as dasasd asd sa sa </Typography>
+                    <Typography 
+                      style={{
+                        overflow: 'hidden', 
+                        textOverflow: "ellipsis", 
+                        whiteSpace: 'nowrap', 
+                        maxWidth: '250px'}}>
+                          {val.username}
+                    </Typography>
+                    <Typography variant='body2' color='GrayText' style={{overflow: 'hidden', textOverflow: "ellipsis", whiteSpace: 'nowrap', maxWidth: '250px'}}>
+                      {val.messages}
+                    </Typography>
                   </div>
                 </div>
             ))}

@@ -1,25 +1,22 @@
 import React, { useState } from 'react'
 import AppBar from '@mui/material/AppBar';
 import Box from '@mui/material/Box';
-import Drawer from '@mui/material/Drawer';
 import IconButton from '@mui/material/IconButton';
-import List from '@mui/material/List';
-import ListItem from '@mui/material/ListItem';
-import ListItemButton from '@mui/material/ListItemButton';
-import ListItemText from '@mui/material/ListItemText';
-import MenuIcon from '@mui/icons-material/Menu';
 import Toolbar from '@mui/material/Toolbar';
 import Typography from '@mui/material/Typography';
-import Button from '@mui/material/Button';
 import Tooltip from '@mui/material/Tooltip';
 import Menu from '@mui/material/Menu';
 import Avatar from '@mui/material/Avatar';
 import MenuItem from '@mui/material/MenuItem';
-
+import { useNavigate } from 'react-router-dom';
+import { useSelector, useDispatch } from 'react-redux';
 
 const ChatNavbar = () => {
   const settings = ['Profile', 'Account', 'Dashboard', 'Logout'];
   const [anchorElUser, setAnchorElUser] = useState(null);
+  const navigate = useNavigate()
+  const dispatch = useDispatch()
+  const user = useSelector(state => state.user)
 
   const handleOpenUserMenu = (event) => {
     setAnchorElUser(event.currentTarget);
@@ -28,6 +25,13 @@ const ChatNavbar = () => {
     setAnchorElUser(null);
   };
 
+  const handleSettings = (setting) => {
+    if(setting === 'Logout')
+    {
+      dispatch({type: 'LOGOUT'})
+      navigate('/login')
+    }
+  }
 
   return (
       <Box sx={{ display: 'flex'}}>
@@ -46,7 +50,7 @@ const ChatNavbar = () => {
                 <Box>
                     <Tooltip title="Open settings">
                         <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
-                            <Avatar>V</Avatar>
+                            <Avatar src={user.image}/>
                         </IconButton>
                     </Tooltip>
                     <Menu
@@ -66,7 +70,7 @@ const ChatNavbar = () => {
                     onClose={handleCloseUserMenu}
                     >
                     {settings.map((setting) => (
-                        <MenuItem key={setting} onClick={handleCloseUserMenu}>
+                        <MenuItem key={setting} onClick={() => handleSettings(setting)}>
                         <Typography textAlign="center">{setting}</Typography>
                         </MenuItem>
                     ))}

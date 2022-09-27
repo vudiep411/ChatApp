@@ -1,8 +1,10 @@
 import React from 'react'
 import { Avatar, Typography } from '@mui/material'
-import mck from '../utils/mock.jpg'
+import mck from '../utils/images/mock.jpg'
+import { userMessages } from '../utils/mockdata'
 
-var data = Array.from({length: 20}, (v, i) => i)
+// var data = Array.from({length: 20}, (v, i) => i)
+const data = userMessages
 
 const Messages = () => {
   return (
@@ -14,15 +16,17 @@ const Messages = () => {
             overflowY: 'scroll'
             }}>
         {
-            data?.map((val) => (
-                <div style={{display: 'flex', gap: '15px', padding: '15px'}}>
-                    <Avatar sx={{width: 50, height: 50}} src={mck}></Avatar>
+            data?.map((val, i) => (
+                <div style={{display: 'flex', gap: '15px', padding: '15px'}} key={i}>
+                    <Avatar sx={{width: 50, height: 50}} src={val.image}/>
                     <div>
                         <div style={{display: 'flex', gap: '10px'}}>
-                            <Typography><b>Vu Diep</b></Typography>
+                            <Typography><b>{val.username}</b></Typography>
                             <Typography variant='body2' color='GrayText' style={{marginTop: '2px'}}>09/25/2022</Typography>
                         </div>
-                        <Typography variant='body1' style={{marginTop: '2px'}}>Lorem ipsum dolor, sit amet consectetur adipisicing elit. Laboriosam pariatur, in rerum nostrum, asperiores mollitia molestias modi aspernatur perferendis repudiandae eligendi vero aliquid tenetur nam fugiat neque quisquam vitae et.</Typography>
+                        <Typography variant='body1' style={{marginTop: '2px'}}>
+                            {val.messages}
+                        </Typography>
                     </div>
                 </div>
             ))

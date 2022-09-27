@@ -16,6 +16,7 @@ const Navbar = () => {
   const [mobileOpen, setMobileOpen] = useState(false);
   const navItems = ['Home', 'About', 'Contact'];
   const drawerWidth = 240;
+
   const handleDrawerToggle = () => {
     setMobileOpen(!mobileOpen);
   };
