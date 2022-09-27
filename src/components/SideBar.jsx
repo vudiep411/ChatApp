@@ -9,6 +9,13 @@ const data = userMessages
 const SideBar = () => {
   const [searchText, setSearchText] = useState('')
   const [selectedUid, setSelectedUid] = useState('')
+  console.log(searchText)
+  const filtered = !searchText ? data :
+  data.filter(
+    (user) => user.username
+              .toString()
+              .toLowerCase()
+              .includes(searchText.toLowerCase()))
 
   return (
     <Grid sx={{display: {xs : 'none', sm: 'block'}}}>
@@ -23,7 +30,7 @@ const SideBar = () => {
         }}>
             <div style={{ marginTop: '90px', padding: '10px'}}>
               <SearchBar searchText={searchText} setSearchText={setSearchText}/>
-              { data?.map((val, i) => (
+              { filtered?.map((val, i) => (
                 <div 
                   className={selectedUid === val.uid ? 'active-person' : 'person'} 
                   key={i}
