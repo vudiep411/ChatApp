@@ -10,23 +10,15 @@ import ChatField from '../components/ChatField'
 
 
 const Home = () => {
-    // const dispatch = useDispatch()
-    
-    // useEffect(() => {
-    //   dispatch(getObj())
-    // }, [dispatch])
-
-    // const {people} = useSelector(state => state.object)
-    // console.log(people)
-    // if(people.length === 0) return null
+  const [selectedConvoId, setSelectedConvoId] = useState('')
   const [chatMsg, setChatMsg] = useState('')
   return (
     <div>
       <ChatNavbar/>
       <MediaQuery minWidth={500}>
         <div style={{display: 'flex'}}>
-          <SideBar/>
-          <Messages/>
+          <SideBar selectedConvoId={selectedConvoId} setSelectedConvoId={setSelectedConvoId}/>
+          <Messages selectedConvoId={selectedConvoId}/>
         </div>
         <ChatField chatMsg={chatMsg} setChatMsg={setChatMsg}/>
       </MediaQuery>

@@ -6,10 +6,9 @@ import { userMessages } from '../utils/mockdata'
 
 // var data = Array.from({length: 20}, (v, i) => i)
 const data = userMessages
-const SideBar = () => {
+const SideBar = ({ selectedConvoId, setSelectedConvoId }) => {
   const [searchText, setSearchText] = useState('')
-  const [selectedUid, setSelectedUid] = useState('')
-  console.log(searchText)
+
   const filtered = !searchText ? data :
   data.filter(
     (user) => user.username
@@ -32,9 +31,9 @@ const SideBar = () => {
               <SearchBar searchText={searchText} setSearchText={setSearchText}/>
               { filtered?.map((val, i) => (
                 <div 
-                  className={selectedUid === val.uid ? 'active-person' : 'person'} 
+                  className={selectedConvoId === val._id ? 'active-person' : 'person'} 
                   key={i}
-                  onClick={() => setSelectedUid(val.uid)}
+                  onClick={() => setSelectedConvoId(val._id)}
                 >
                   <Avatar sx={{width: 50, height: 50}} src={val.image}></Avatar>
                   <div>
@@ -47,7 +46,7 @@ const SideBar = () => {
                           {val.username}
                     </Typography>
                     <Typography variant='body2' color='GrayText' style={{overflow: 'hidden', textOverflow: "ellipsis", whiteSpace: 'nowrap', maxWidth: '250px'}}>
-                      {val.messages}
+                      {val.lastMessage}
                     </Typography>
                   </div>
                 </div>
