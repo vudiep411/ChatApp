@@ -10,6 +10,7 @@ import { useDispatch } from 'react-redux';
 import {  signInWithPopup, GoogleAuthProvider } from 'firebase/auth';
 import { auth } from '../firebase';
 import { useNavigate } from 'react-router-dom';
+import { createOrUpdateUser } from '../actions/firebase'
 
 const Login = () => {
 
@@ -26,19 +27,21 @@ const Login = () => {
           const user = result.user;
           if(token)
           {
-              dispatch({type: 'AUTH_USER', payload: {
-                uid: user.uid,
+            const data = {
                 name: user.displayName,
-                image: user.photoURL,
-                }})
+                username: user.displayName,
+                image: user.photoURL,                
+            }
+              dispatch({type: 'AUTH_USER', payload: data})
+            createOrUpdateUser(data, user.uid)
             navigate('/')
           }
         }).catch((error) => {
             // Handle Errors here.
-            const errorCode = error.code;
-            const errorMessage = error.message;
-            const email = error.customData.email;
-            const credential = GoogleAuthProvider.credentialFromError(error);
+            // const errorCode = error.code;
+            // const errorMessage = error.message;
+            // const email = error.customData.email;
+            // const credential = GoogleAuthProvider.credentialFromError(error);
         });
     }
 

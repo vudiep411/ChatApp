@@ -48,6 +48,48 @@ export const messages = [
             username: 'Vu Diep',
             uid: '123456',
             message: 'Lorem ipsum dolor, sit amet consectetur adipisicing elit. Laboriosam pariatur, in rerum nostrum, asperiores mollitia molestias modi aspernatur perferendis repudiandae eligendi vero aliquid tenetur nam fugiat neque quisquam vitae et.',
+        },
+        {
+            uid: '123456',
+            username: 'Vu Diep',
+            date: '09/27/2022',
+            image: mock,
+            message: 'Hello',
+        },
+        {
+            date: '09/27/2022',
+            image: mock,
+            username: 'Vu Diep',
+            uid: '123456',
+            message: 'Lorem ipsum dolor, sit amet consectetur adipisicing elit. Laboriosam pariatur, in rerum nostrum, asperiores mollitia molestias modi aspernatur perferendis repudiandae eligendi vero aliquid tenetur nam fugiat neque quisquam vitae et.',
+        },
+        {
+            uid: '123456',
+            username: 'Vu Diep',
+            date: '09/27/2022',
+            image: mock,
+            message: 'Hello',
+        },
+        {
+            date: '09/27/2022',
+            image: mock,
+            username: 'Vu Diep',
+            uid: '123456',
+            message: 'Lorem ipsum dolor, sit amet consectetur adipisicing elit. Laboriosam pariatur, in rerum nostrum, asperiores mollitia molestias modi aspernatur perferendis repudiandae eligendi vero aliquid tenetur nam fugiat neque quisquam vitae et.',
+        },
+        {
+            uid: '123456',
+            username: 'Vu Diep',
+            date: '09/27/2022',
+            image: mock,
+            message: 'Hello',
+        },
+        {
+            date: '09/27/2022',
+            image: mock,
+            username: 'Vu Diep',
+            uid: '123456',
+            message: 'Lorem ipsum dolor, sit amet consectetur adipisicing elit. Laboriosam pariatur, in rerum nostrum, asperiores mollitia molestias modi aspernatur perferendis repudiandae eligendi vero aliquid tenetur nam fugiat neque quisquam vitae et.',
         }
     
     ]

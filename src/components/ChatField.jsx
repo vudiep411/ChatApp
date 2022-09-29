@@ -4,24 +4,32 @@ import OutlinedInput from '@mui/material/OutlinedInput';
 import InputAdornment from '@mui/material/InputAdornment';
 import SendIcon from '@mui/icons-material/Send';
 import AddCircleIcon from '@mui/icons-material/AddCircle';
+import { Button } from '@mui/material';
 
 const ChatField = ({ chatMsg, setChatMsg }) => {
 
     const handleSend = () => {
         setChatMsg('')
-        console.log("sent")
+        console.log(chatMsg)
     }
 
   return (
-    <div style={{position: 'absolute', bottom: '10px', left: '370px', width: '55vw'}}>
-        <FormControl fullWidth >
+        <FormControl fullWidth>
             <OutlinedInput
                 size="small"
                 id="outlined-adornment-amount"
                 onChange={(e) => {setChatMsg(e.target.value)}}
                 startAdornment={
                     <InputAdornment position="start" >
-                        <AddCircleIcon style={{cursor: 'pointer'}}/>
+                        <input 
+                            type='file' 
+                            id='add'
+                            style={{display: 'none'}} 
+                            accept='image/*'   
+                        />
+                        <label htmlFor='add'>
+                            <AddCircleIcon style={{cursor: 'pointer', marginTop: '5px'}}/>
+                        </label>
                     </InputAdornment>
                 }
                 endAdornment={
@@ -40,7 +48,6 @@ const ChatField = ({ chatMsg, setChatMsg }) => {
                 value={chatMsg}
             />
         </FormControl>   
-    </div>
 
   )
 }
