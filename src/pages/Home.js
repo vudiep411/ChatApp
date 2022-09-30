@@ -4,7 +4,6 @@ import SideBar from '../components/SideBar'
 import MediaQuery from 'react-responsive'
 import ChatNavbar from '../components/ChatNavbar'
 import Messages from '../components/Messages'
-import ChatField from '../components/ChatField'
 
 const Home = () => {
   const [selectedConvoId, setSelectedConvoId] = useState('')

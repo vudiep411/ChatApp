@@ -9,6 +9,7 @@ const data = userMessages
 const SideBar = ({ selectedConvoId, setSelectedConvoId }) => {
   const [searchText, setSearchText] = useState('')
 
+  // Test code
   const filtered = !searchText ? data :
   data.filter(
     (user) => user.username
