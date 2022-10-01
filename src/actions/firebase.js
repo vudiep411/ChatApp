@@ -3,9 +3,14 @@ import { db } from "../firebase";
 import { Firestore } from "firebase/firestore";
 
 export const createOrUpdateUser = async (data, uid) => {
-    await setDoc(doc(db, "users" , uid), {
-        data
-    })
+    const user = await getDoc(doc(db, 'users', uid))
+
+    if(!user.exists())
+    { 
+        await setDoc(doc(db, "users" , uid), {
+            data
+        }, {merge: true})
+    }
 }
 
 export const getSearchUser = async (username, setUsers, currentId) => {
@@ -24,7 +29,7 @@ export const getSearchUser = async (username, setUsers, currentId) => {
     return users
 }
 
-export const createOrSelectChatRoom = async (id, currentId, setSelectedConvoId) => {
+export const createOrSelectChatRoom = async (id, currentId, setSelectedConvoId, setRooms) => {
     const userRef = doc(db, 'users', id)
     const userSnap = await getDoc(userRef)
 
@@ -39,9 +44,6 @@ export const createOrSelectChatRoom = async (id, currentId, setSelectedConvoId) 
     // if user has 0 rooms active
     if(!roomIds) {
         // Set a new room id
-        await updateDoc(userRef, {
-            chatrooms: [combinedId]
-        })
         await updateDoc(doc(db, 'users', currentId), {
             chatrooms: [combinedId]            
         })
@@ -58,9 +60,6 @@ export const createOrSelectChatRoom = async (id, currentId, setSelectedConvoId) 
         })
     }
     else if(!roomIds.includes(combinedId)){
-        await updateDoc(userRef, {
-            chatrooms: arrayUnion(combinedId)
-        })
         await updateDoc(doc(db, 'users', currentId), {
             chatrooms: arrayUnion(combinedId)            
         })
@@ -76,19 +75,29 @@ export const createOrSelectChatRoom = async (id, currentId, setSelectedConvoId) 
             lastMessage: ''
         })
     }
+    setRooms(prev => ([...prev, {
+        memberId: {
+            [id] : true,
+            [currentId]: true
+        },
+        members : roomMembers,
+        date: serverTimestamp(),
+        lastMessage: ''
+    }]))
 }
 
-export const getChatRooms =  (currentId) => async(dispatch) => {
-    const roomsRef = collection(db, 'rooms')
-    const q = query(roomsRef, 
-            where(`memberId.${currentId}`, '==', true))
-    const roomSnap = await getDocs(q)
+export const getChatRooms = async (currentId, setRooms) => {
+    const userRef = doc(db, 'users', currentId)
+    const userData = await getDoc(userRef)
+    const roomListId = userData.data()?.chatrooms
     let rooms = []
-    roomSnap.forEach(doc => {
-        const d = doc.data().date.toDate().toLocaleString('en-US')
-        rooms.push({...doc.data(), date: d, id: doc.id})
-    })
-    dispatch({type: 'GET_ROOMS', payload: rooms})
+    if(roomListId) {
+        for(let i = 0; i < roomListId.length; i++) {
+            const roomData = await getDoc(doc(db, 'rooms', roomListId[i]))
+            rooms.push({id: roomData.id, ...roomData.data()})
+        }
+    }
+    setRooms(rooms)
 }
 
 export const sendMessage = async () => {

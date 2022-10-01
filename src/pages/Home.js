@@ -9,14 +9,15 @@ import { getChatRooms } from '../actions/firebase'
 
 const Home = () => {
   const [selectedConvoId, setSelectedConvoId] = useState('')
-  const [rooms, setRooms] = useState([])
   const userProfile = useSelector(state => state.user)
-
-  const dispatch = useDispatch()
+  const [rooms, setRooms] = useState([])
 
   useEffect(() => {
-    dispatch(getChatRooms(userProfile.id))
-  }, [userProfile])
+    const getRooms = async () => {
+      await getChatRooms(userProfile.id, setRooms)
+    }
+    getRooms()
+  }, [])
   
 
   return (
@@ -24,7 +25,7 @@ const Home = () => {
       <ChatNavbar/>
       <MediaQuery minWidth={500}>
         <div style={{display: 'flex'}}>
-          <SideBar selectedConvoId={selectedConvoId} setSelectedConvoId={setSelectedConvoId}/>
+          <SideBar selectedConvoId={selectedConvoId} setSelectedConvoId={setSelectedConvoId} rooms={rooms} setRooms={setRooms}/>
           <Messages selectedConvoId={selectedConvoId}/>
         </div>
       </MediaQuery>

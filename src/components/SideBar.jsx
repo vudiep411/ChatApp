@@ -5,19 +5,18 @@ import '../index.css'
 import { useSelector } from 'react-redux'
 
 
-const SideBar = ({ selectedConvoId, setSelectedConvoId }) => {
+const SideBar = ({ selectedConvoId, setSelectedConvoId, rooms, setRooms }) => {
   const [searchText, setSearchText] = useState('')
-  const rooms = useSelector(state => state.chatrooms)
   const userProfile = useSelector(state => state.user)
-  // console.log(rooms)
 
-  const filtered = !searchText ? rooms :
-  rooms.filter(
-    (user) => user
-    .username
-    .toString()
-    .toLowerCase()
-    .includes(searchText.toLowerCase()))
+  // const filtered = !searchText ? rooms :
+  // rooms.filter(
+  //   (user) => user
+  //   .members
+  //   .username
+  //   .toString()
+  //   .toLowerCase()
+  //   .includes(searchText.toLowerCase()))
 
   return (
     <Grid sx={{display: {xs : 'none', sm: 'block'}}}>
@@ -31,17 +30,17 @@ const SideBar = ({ selectedConvoId, setSelectedConvoId }) => {
             borderRight: '1px solid rgb(208,208,208)'
             }}>
             <div style={{ marginTop: '90px', padding: '10px'}}>
-            <SearchBar searchText={searchText} setSearchText={setSearchText} setSelectedConvoId={setSelectedConvoId}/>
-              { filtered?.map((val, i) => (
+            <SearchBar searchText={searchText} setSearchText={setSearchText} setSelectedConvoId={setSelectedConvoId} setRooms={setRooms}/>
+              { rooms?.map((val, i) => (
                 <div 
                   className={selectedConvoId === val.id ? 'active-person' : 'person'} 
-                  key={i}
+                  key={val.id}
                   onClick={() => setSelectedConvoId(val.id)}
                 >
                   {
                     val.members.filter(mem => mem.id !== userProfile.id).map(user => 
                       (
-                        <div style={{display: 'flex', gap: '15px'}} key={i}>
+                        <div style={{display: 'flex', gap: '15px'}} key={user.id}>
                           <Avatar sx={{width: 50, height: 50}} src={user.image}></Avatar>
                           <div>
                             <Typography 
@@ -53,7 +52,7 @@ const SideBar = ({ selectedConvoId, setSelectedConvoId }) => {
                                 {user.username}
                             </Typography>
                             <Typography variant='body2' color='GrayText' style={{overflow: 'hidden', textOverflow: "ellipsis", whiteSpace: 'nowrap', maxWidth: '250px'}}>
-                              {val.lastMessage || 'You are now connected'}
+                              {val.lastMessage || 'Start your legendary convo from here'}
                             </Typography>
                           </div>
                         </div>

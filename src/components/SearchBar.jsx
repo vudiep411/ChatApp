@@ -10,7 +10,7 @@ import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import '../index.css'
 import { useSelector } from 'react-redux';
 
-const SearchBar = ({ setSearchText, searchText, setSelectedConvoId }) => {
+const SearchBar = ({ setSearchText, searchText, setSelectedConvoId, setRooms }) => {
   const [users, setUsers] = useState()
   const userProfile = useSelector(state => state.user)
 
@@ -18,13 +18,11 @@ const SearchBar = ({ setSearchText, searchText, setSelectedConvoId }) => {
     if(e.key === 'Enter') {
       e.preventDefault()
       await getSearchUser(searchText, setUsers, userProfile.id)
-      await getChatRooms(userProfile.id)
     }
   }
 
   const handleAddRoom = async (id) => {
-    console.log('click')
-    await createOrSelectChatRoom(id, userProfile.id, setSelectedConvoId)
+    await createOrSelectChatRoom(id, userProfile.id, setSelectedConvoId, setRooms)
   }
 
   return (
