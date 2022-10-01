@@ -4,9 +4,20 @@ import SideBar from '../components/SideBar'
 import MediaQuery from 'react-responsive'
 import ChatNavbar from '../components/ChatNavbar'
 import Messages from '../components/Messages'
+import { useDispatch, useSelector } from 'react-redux'
+import { getChatRooms } from '../actions/firebase'
 
 const Home = () => {
   const [selectedConvoId, setSelectedConvoId] = useState('')
+  const [rooms, setRooms] = useState([])
+  const userProfile = useSelector(state => state.user)
+
+  const dispatch = useDispatch()
+
+  useEffect(() => {
+    dispatch(getChatRooms(userProfile.id))
+  }, [userProfile])
+  
 
   return (
     <div>

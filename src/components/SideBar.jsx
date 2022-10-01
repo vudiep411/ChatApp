@@ -2,20 +2,22 @@ import React, { useState } from 'react'
 import { Avatar, Grid, Typography } from '@mui/material'
 import SearchBar from './SearchBar'
 import '../index.css'
-import { userMessages } from '../utils/mockdata'
+import { useSelector } from 'react-redux'
 
-// var data = Array.from({length: 20}, (v, i) => i)
-const data = userMessages
+
 const SideBar = ({ selectedConvoId, setSelectedConvoId }) => {
   const [searchText, setSearchText] = useState('')
+  const rooms = useSelector(state => state.chatrooms)
+  const userProfile = useSelector(state => state.user)
+  // console.log(rooms)
 
-  // Test code
-  const filtered = !searchText ? data :
-  data.filter(
-    (user) => user.username
-              .toString()
-              .toLowerCase()
-              .includes(searchText.toLowerCase()))
+  const filtered = !searchText ? rooms :
+  rooms.filter(
+    (user) => user
+    .username
+    .toString()
+    .toLowerCase()
+    .includes(searchText.toLowerCase()))
 
   return (
     <Grid sx={{display: {xs : 'none', sm: 'block'}}}>
@@ -27,30 +29,41 @@ const SideBar = ({ selectedConvoId, setSelectedConvoId }) => {
             top: '0',
             bottom: '0',
             borderRight: '1px solid rgb(208,208,208)'
-        }}>
+            }}>
             <div style={{ marginTop: '90px', padding: '10px'}}>
-              <SearchBar searchText={searchText} setSearchText={setSearchText}/>
+            <SearchBar searchText={searchText} setSearchText={setSearchText} setSelectedConvoId={setSelectedConvoId}/>
               { filtered?.map((val, i) => (
                 <div 
-                  className={selectedConvoId === val._id ? 'active-person' : 'person'} 
+                  className={selectedConvoId === val.id ? 'active-person' : 'person'} 
                   key={i}
-                  onClick={() => setSelectedConvoId(val._id)}
+                  onClick={() => setSelectedConvoId(val.id)}
                 >
-                  <Avatar sx={{width: 50, height: 50}} src={val.image}></Avatar>
-                  <div>
-                    <Typography 
-                      style={{
-                        overflow: 'hidden', 
-                        textOverflow: "ellipsis", 
-                        whiteSpace: 'nowrap', 
-                        maxWidth: '250px'}}>
-                          {val.username}
-                    </Typography>
-                    <Typography variant='body2' color='GrayText' style={{overflow: 'hidden', textOverflow: "ellipsis", whiteSpace: 'nowrap', maxWidth: '250px'}}>
-                      {val.lastMessage}
-                    </Typography>
-                  </div>
-                </div>
+                  {
+                    val.members.filter(mem => mem.id !== userProfile.id).map(user => 
+                      (
+                        <div style={{display: 'flex', gap: '15px'}} key={i}>
+                          <Avatar sx={{width: 50, height: 50}} src={user.image}></Avatar>
+                          <div>
+                            <Typography 
+                              style={{
+                              overflow: 'hidden', 
+                              textOverflow: "ellipsis", 
+                              whiteSpace: 'nowrap', 
+                              maxWidth: '250px'}}>
+                                {user.username}
+                            </Typography>
+                            <Typography variant='body2' color='GrayText' style={{overflow: 'hidden', textOverflow: "ellipsis", whiteSpace: 'nowrap', maxWidth: '250px'}}>
+                              {val.lastMessage || 'You are now connected'}
+                            </Typography>
+                          </div>
+                        </div>
+                      )
+                    )
+                  }
+                  
+                <div>
+              </div>
+            </div>
             ))}
             </div>
         </div>

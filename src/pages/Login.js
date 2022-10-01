@@ -32,7 +32,7 @@ const Login = () => {
                 username: user.displayName,
                 image: user.photoURL,                
             }
-              dispatch({type: 'AUTH_USER', payload: data})
+              dispatch({type: 'AUTH_USER', payload: {...data, id: user.uid}})
             createOrUpdateUser(data, user.uid)
             navigate('/')
           }

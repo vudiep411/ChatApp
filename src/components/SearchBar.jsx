@@ -3,24 +3,28 @@ import FormControl from '@mui/material/FormControl';
 import OutlinedInput from '@mui/material/OutlinedInput';
 import InputAdornment from '@mui/material/InputAdornment';
 import SearchIcon from '@mui/icons-material/Search';
-import { getSearchUser } from '../actions/firebase';
+import { createOrSelectChatRoom, getChatRooms, getSearchUser } from '../actions/firebase';
 import { Typography, Paper, Button } from '@mui/material';
 import { Avatar } from '@mui/material';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import '../index.css'
+import { useSelector } from 'react-redux';
 
-const SearchBar = ({ setSearchText, searchText }) => {
+const SearchBar = ({ setSearchText, searchText, setSelectedConvoId }) => {
   const [users, setUsers] = useState()
+  const userProfile = useSelector(state => state.user)
 
   const handleKeydown = async (e) => {
     if(e.key === 'Enter') {
       e.preventDefault()
-      await getSearchUser(searchText, setUsers)
+      await getSearchUser(searchText, setUsers, userProfile.id)
+      await getChatRooms(userProfile.id)
     }
   }
 
-  const handleAddRoom = () => {
+  const handleAddRoom = async (id) => {
     console.log('click')
+    await createOrSelectChatRoom(id, userProfile.id, setSelectedConvoId)
   }
 
   return (
@@ -41,7 +45,7 @@ const SearchBar = ({ setSearchText, searchText }) => {
         <Paper style={{padding: '5px'}}>
           <Button style={{color: 'gray'}} onClick={() => setUsers(null)}><ArrowBackIcon/></Button>
           { users.map((user) =>
-            <div key={user.id} className='person' onClick={handleAddRoom}>
+            <div key={user.id} className='person' onClick={() => handleAddRoom(user.id)}>
               <Avatar src={user.data.image}/>
               <Typography style={{marginTop: '7px'}}>{user.data.username}</Typography>
             </div>

@@ -10,6 +10,7 @@ import Avatar from '@mui/material/Avatar';
 import MenuItem from '@mui/material/MenuItem';
 import { useNavigate } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
+import { auth } from '../firebase';
 
 const ChatNavbar = () => {
   const settings = ['Profile', 'Account', 'Dashboard', 'Logout'];
@@ -28,6 +29,7 @@ const ChatNavbar = () => {
   const handleSettings = (setting) => {
     if(setting === 'Logout')
     {
+      auth.signOut()
       dispatch({type: 'LOGOUT'})
       navigate('/login')
     }
