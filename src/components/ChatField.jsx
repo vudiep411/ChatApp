@@ -4,13 +4,15 @@ import OutlinedInput from '@mui/material/OutlinedInput';
 import InputAdornment from '@mui/material/InputAdornment';
 import SendIcon from '@mui/icons-material/Send';
 import AddCircleIcon from '@mui/icons-material/AddCircle';
-import { Button } from '@mui/material';
+import { useDispatch, useSelector } from 'react-redux';
+import { sendMessage } from '../actions/firebase';
 
-const ChatField = ({ chatMsg, setChatMsg }) => {
-
+const ChatField = ({ chatMsg, setChatMsg, selectedConvoId, setRooms }) => {
+    const dispatch = useDispatch()
+    const user = useSelector(state => state.user)
     const handleSend = () => {
         setChatMsg('')
-        console.log(chatMsg)
+        dispatch(sendMessage(selectedConvoId, chatMsg, user, setRooms))
     }
 
   return (

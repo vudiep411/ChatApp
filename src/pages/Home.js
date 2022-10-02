@@ -11,13 +11,14 @@ const Home = () => {
   const [selectedConvoId, setSelectedConvoId] = useState('')
   const userProfile = useSelector(state => state.user)
   const [rooms, setRooms] = useState([])
+  const [messages, setMessages] = useState([])
 
   useEffect(() => {
     const getRooms = async () => {
       await getChatRooms(userProfile.id, setRooms)
     }
     getRooms()
-  }, [])
+  }, [userProfile])
   
 
   return (
@@ -25,8 +26,18 @@ const Home = () => {
       <ChatNavbar/>
       <MediaQuery minWidth={500}>
         <div style={{display: 'flex'}}>
-          <SideBar selectedConvoId={selectedConvoId} setSelectedConvoId={setSelectedConvoId} rooms={rooms} setRooms={setRooms}/>
-          <Messages selectedConvoId={selectedConvoId}/>
+          <SideBar 
+            selectedConvoId={selectedConvoId} 
+            setSelectedConvoId={setSelectedConvoId} 
+            rooms={rooms} 
+            setRooms={setRooms}
+            setMessages={setMessages}
+          />
+          <Messages 
+            selectedConvoId={selectedConvoId}
+            messages={messages}
+            setRooms={setRooms}
+          />
         </div>
       </MediaQuery>
     </div>

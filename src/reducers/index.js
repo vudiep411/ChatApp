@@ -1,5 +1,5 @@
 import { combineReducers } from "redux";
-import chatrooms from "./chatrooms";
+import conversations from "./conversations";
 import user from "./user";
 
-export default combineReducers({ user, chatrooms })
+export default combineReducers({ user, conversations })

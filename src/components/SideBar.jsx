@@ -2,12 +2,14 @@ import React, { useState } from 'react'
 import { Avatar, Grid, Typography } from '@mui/material'
 import SearchBar from './SearchBar'
 import '../index.css'
-import { useSelector } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
+import { getConversation } from '../actions/firebase'
 
 
-const SideBar = ({ selectedConvoId, setSelectedConvoId, rooms, setRooms }) => {
+const SideBar = ({ selectedConvoId, setSelectedConvoId, rooms, setRooms, setMessages }) => {
   const [searchText, setSearchText] = useState('')
   const userProfile = useSelector(state => state.user)
+  const dispatch = useDispatch()
 
   // const filtered = !searchText ? rooms :
   // rooms.filter(
@@ -17,7 +19,10 @@ const SideBar = ({ selectedConvoId, setSelectedConvoId, rooms, setRooms }) => {
   //   .toString()
   //   .toLowerCase()
   //   .includes(searchText.toLowerCase()))
-
+  const handleSelectedConvo = (convoId) => {
+    setSelectedConvoId(convoId)
+    dispatch(getConversation(convoId, setMessages))
+  }
   return (
     <Grid sx={{display: {xs : 'none', sm: 'block'}}}>
         <div style={{
@@ -30,12 +35,12 @@ const SideBar = ({ selectedConvoId, setSelectedConvoId, rooms, setRooms }) => {
             borderRight: '1px solid rgb(208,208,208)'
             }}>
             <div style={{ marginTop: '90px', padding: '10px'}}>
-            <SearchBar searchText={searchText} setSearchText={setSearchText} setSelectedConvoId={setSelectedConvoId} setRooms={setRooms}/>
-              { rooms?.map((val, i) => (
+              <SearchBar searchText={searchText} setSearchText={setSearchText} setSelectedConvoId={setSelectedConvoId} setRooms={setRooms}/>
+              { rooms?.map((val) => (
                 <div 
                   className={selectedConvoId === val.id ? 'active-person' : 'person'} 
                   key={val.id}
-                  onClick={() => setSelectedConvoId(val.id)}
+                  onClick={() => handleSelectedConvo(val.id)}
                 >
                   {
                     val.members.filter(mem => mem.id !== userProfile.id).map(user => 
@@ -52,18 +57,15 @@ const SideBar = ({ selectedConvoId, setSelectedConvoId, rooms, setRooms }) => {
                                 {user.username}
                             </Typography>
                             <Typography variant='body2' color='GrayText' style={{overflow: 'hidden', textOverflow: "ellipsis", whiteSpace: 'nowrap', maxWidth: '250px'}}>
-                              {val.lastMessage || 'Start your legendary convo from here'}
+                              {val.lastMessage || 'Send message'}
                             </Typography>
                           </div>
                         </div>
-                      )
-                    )
-                  }
-                  
-                <div>
+                      ))}
+                  <div>
+                </div>
               </div>
-            </div>
-            ))}
+              ))}
             </div>
         </div>
 
