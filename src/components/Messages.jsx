@@ -2,9 +2,12 @@ import React, { useState }from 'react'
 import { Avatar, Typography } from '@mui/material'
 import ChatField from './ChatField'
 import { convert } from '../utils/functions'
+import { useMediaQuery } from 'react-responsive'
 
 const Messages = ({ selectedConvoId, messages, setRooms }) => {
     const [chatMsg, setChatMsg] = useState('')
+    const isTabletOrMobile = useMediaQuery({ query: '(max-width: 499px)' })
+    const height = isTabletOrMobile ? '82vh' : '87vh'
   return (
     <div 
         style={{
@@ -13,7 +16,7 @@ const Messages = ({ selectedConvoId, messages, setRooms }) => {
             padding: '5px'
           }}>
           {selectedConvoId && 
-              <div style={{height: '87vh', overflowY: 'scroll',}}>
+              <div style={{height: height, overflowY: 'scroll',}}>
                   {messages?.map((val, i) => {
                     const formatDate = convert(val.date.toDate().toString())
                     return (

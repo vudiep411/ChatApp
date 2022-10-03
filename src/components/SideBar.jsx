@@ -6,26 +6,31 @@ import { useDispatch, useSelector } from 'react-redux'
 import { getConversation } from '../actions/firebase'
 
 
-const SideBar = ({ selectedConvoId, setSelectedConvoId, rooms, setRooms, setMessages }) => {
+const SideBar = ({ selectedConvoId, setSelectedConvoId, rooms, setRooms, setMessages, setShowSideBar }) => {
   const [searchText, setSearchText] = useState('')
   const userProfile = useSelector(state => state.user)
   const dispatch = useDispatch()
 
 
-  // const filtered = !searchText ? rooms :
-  // rooms.filter(
-  //   (user) => user
-  //   .members
-  //   .username
-  //   .toString()
-  //   .toLowerCase()
-  //   .includes(searchText.toLowerCase()))
+  const filtered = !searchText ? rooms :
+  rooms.filter(
+    (room) => room
+    .members.every(member => 
+      member
+      .username
+      .toString()
+      .toLowerCase()
+      .includes(searchText.toLowerCase()))
+    )
+
+
   const handleSelectedConvo = (convoId) => {
     setSelectedConvoId(convoId)
+    setShowSideBar(false)
     dispatch(getConversation(convoId, setMessages))
   }
   return (
-    <Grid sx={{display: {xs : 'none', sm: 'block'}}}>
+    <Grid>
         <div style={{
             width: '350px', 
             backgroundColor: 'white',
@@ -41,8 +46,10 @@ const SideBar = ({ selectedConvoId, setSelectedConvoId, rooms, setRooms, setMess
                 setSearchText={setSearchText} 
                 setSelectedConvoId={setSelectedConvoId} 
                 setRooms={setRooms} 
-                setMessages={setMessages}/>
-              { rooms?.map((val) => (
+                setMessages={setMessages}
+                setShowSideBar={setShowSideBar}
+                />
+              { filtered?.map((val) => (
                 <div 
                   className={selectedConvoId === val.id ? 'active-person' : 'person'} 
                   key={val.id}
@@ -66,15 +73,12 @@ const SideBar = ({ selectedConvoId, setSelectedConvoId, rooms, setRooms, setMess
                               {val.lastMessage || 'Send message'}
                             </Typography>
                           </div>
-                        </div>
-                      ))}
-                  <div>
-                </div>
+                        </div>                      
+                  ))}
               </div>
               ))}
             </div>
         </div>
-
     </Grid>
   )
 }

@@ -7,10 +7,11 @@ import { createOrSelectChatRoom, getChatRooms, getSearchUser } from '../actions/
 import { Typography, Paper, Button } from '@mui/material';
 import { Avatar } from '@mui/material';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
+import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
 import '../index.css'
 import { useSelector } from 'react-redux';
 
-const SearchBar = ({ setSearchText, searchText, setSelectedConvoId, setRooms, setMessages }) => {
+const SearchBar = ({ setSearchText, searchText, setSelectedConvoId, setRooms, setMessages, setShowSideBar }) => {
   const [users, setUsers] = useState()
   const userProfile = useSelector(state => state.user)
 
@@ -21,9 +22,20 @@ const SearchBar = ({ setSearchText, searchText, setSelectedConvoId, setRooms, se
     }
   }
 
+  const handleSearch = async () => {
+    await getSearchUser(searchText, setUsers, userProfile.id)  
+  }
+
   const handleAddRoom = async (id) => {
     setUsers(null)
+    setSearchText('')
+    setShowSideBar(false)
     await createOrSelectChatRoom(id, userProfile.id, setSelectedConvoId, setMessages, setRooms)
+  }
+
+  const handleCloseSearch = () => {
+    setUsers(null)
+    setSearchText('')
   }
 
   return (
@@ -34,6 +46,17 @@ const SearchBar = ({ setSearchText, searchText, setSelectedConvoId, setRooms, se
                 id="outlined-adornment-amount"
                 onChange={(e) => {setSearchText(e.target.value)}}
                 startAdornment={<InputAdornment position="start"><SearchIcon/></InputAdornment>}
+                endAdornment={           
+                <InputAdornment position='end' style={{marginTop: '3px'}}>
+                  { searchText &&
+                  <p 
+                    style={{cursor: 'pointer'}}
+                    onClick={handleSearch}
+                  >
+                    <ArrowForwardIcon/>
+                  </p>
+                  }
+                </InputAdornment>}
                 placeholder="Search User"
                 style={{ borderRadius: '15px'}}
                 value={searchText}
@@ -42,13 +65,28 @@ const SearchBar = ({ setSearchText, searchText, setSelectedConvoId, setRooms, se
         </FormControl>
         {users &&
         <Paper style={{padding: '5px'}}>
-          <Button style={{color: 'gray'}} onClick={() => setUsers(null)}><ArrowBackIcon/></Button>
+          <Button 
+            style={{color: 'gray'}} 
+            onClick={handleCloseSearch}>
+            <ArrowBackIcon/>
+          </Button>
           { users.map((user) =>
             <div key={user.id} className='person' onClick={() => handleAddRoom(user.id)}>
               <Avatar src={user.data.image}/>
               <Typography style={{marginTop: '7px'}}>{user.data.username}</Typography>
             </div>
           )}
+          { users.length === 0 &&
+            <Typography 
+              variant='body2' 
+              style={{
+                color: 'gray', 
+                textAlign : 'center',
+                padding: '10px'
+              }}>
+                No Result Found
+            </Typography>
+          }
         </Paper> 
         }   
   </div> 

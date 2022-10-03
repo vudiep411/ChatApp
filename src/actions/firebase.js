@@ -1,7 +1,6 @@
 import { collection, addDoc, setDoc, doc, getDocs, query, where, getDoc, updateDoc, arrayUnion, serverTimestamp, onSnapshot } from "firebase/firestore"; 
 import { db } from "../firebase";
-import { Firestore } from "firebase/firestore";
-import { CompressOutlined } from "@mui/icons-material";
+
 
 export const createOrUpdateUser = async (data, uid) => {
     const user = await getDoc(doc(db, 'users', uid))
@@ -30,7 +29,7 @@ export const getSearchUser = async (username, setUsers, currentId) => {
     return users
 }
 
-export const createOrSelectChatRoom = async (id, currentId, setSelectedConvoId, setMessages, setRooms) => {
+export const createOrSelectChatRoom = async (id, currentId, setSelectedConvoId, setMessages) => {
     const userRef = doc(db, 'users', id)
     const userSnap = await getDoc(userRef)
 
@@ -68,7 +67,12 @@ export const createOrSelectChatRoom = async (id, currentId, setSelectedConvoId, 
             date: serverTimestamp(),
         })
     }
-    // setSelectedConvoId(combinedId)
+    setSelectedConvoId(combinedId)
+    const convo = await getDoc(doc(db, 'conversations', combinedId))
+    if(convo.exists()) {
+        setMessages(convo.data().messages)
+    }
+
 }
 
 export const getChatRooms = async (currentId, setRooms) => {
@@ -88,7 +92,7 @@ export const getChatRooms = async (currentId, setRooms) => {
     })
 }
 
-export const sendMessage = (selectedConvoId, chatMsg, currentUser) => async (dispatch) => {
+export const sendMessage = (selectedConvoId, chatMsg, currentUser, setRooms) => async (dispatch) => {
     const conversations = await getDoc(doc(db, 'conversations', selectedConvoId))
     const messageData = {
         message: chatMsg,
