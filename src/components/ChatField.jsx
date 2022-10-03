@@ -17,7 +17,8 @@ const ChatField = ({ chatMsg, setChatMsg, selectedConvoId, setRooms }) => {
     const handleKeydown = (e) => {
         if(e.key === 'Enter') {
             e.preventDefault()
-            handleSend()
+            dispatch(sendMessage(selectedConvoId, chatMsg, user, setRooms))
+            setChatMsg('')
           }
     }
 

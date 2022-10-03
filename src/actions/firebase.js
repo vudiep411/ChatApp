@@ -1,6 +1,6 @@
 import { collection, addDoc, setDoc, doc, getDocs, query, where, getDoc, updateDoc, arrayUnion, serverTimestamp, onSnapshot } from "firebase/firestore"; 
+import { connectStorageEmulator } from "firebase/storage";
 import { db } from "../firebase";
-
 
 export const createOrUpdateUser = async (data, uid) => {
     const user = await getDoc(doc(db, 'users', uid))
@@ -8,7 +8,8 @@ export const createOrUpdateUser = async (data, uid) => {
     if(!user.exists())
     { 
         await setDoc(doc(db, "users" , uid), {
-            data
+            data,
+            update: false   
         }, {merge: true})
     }
 }
@@ -71,6 +72,8 @@ export const createOrSelectChatRoom = async (id, currentId, setSelectedConvoId, 
     const convo = await getDoc(doc(db, 'conversations', combinedId))
     if(convo.exists()) {
         setMessages(convo.data().messages)
+    } else {
+        setMessages([])
     }
 
 }
@@ -123,12 +126,11 @@ export const sendMessage = (selectedConvoId, chatMsg, currentUser, setRooms) => 
         for(let i = 0; i < roomRef.data().memberId.length; i++)
         {
             const userInRoomRef = await getDoc(doc(db, 'users', roomRef.data().memberId[i]))
-            if(!userInRoomRef.data().chatrooms.includes(selectedConvoId)) {
+            const dummy = !userInRoomRef.data().update
                 await updateDoc(doc(db, 'users', userInRoomRef.id), {
-                    chatrooms: arrayUnion(selectedConvoId)
-                })
-            }
-        }
+                    chatrooms: arrayUnion(selectedConvoId),
+                    update: dummy
+                })}
     }
 }
 

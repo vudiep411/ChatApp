@@ -30,7 +30,7 @@ const Login = () => {
             const data = {
                 name: user.displayName,
                 username: user.displayName,
-                image: user.photoURL,                
+                image: user.photoURL,             
             }
               dispatch({type: 'AUTH_USER', payload: {...data, id: user.uid}})
             createOrUpdateUser(data, user.uid)
