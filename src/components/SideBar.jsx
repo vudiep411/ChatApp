@@ -69,9 +69,15 @@ const SideBar = ({ selectedConvoId, setSelectedConvoId, rooms, setRooms, setMess
                               maxWidth: '250px'}}>
                                 {user.username}
                             </Typography>
-                            <Typography variant='body2' color='GrayText' style={{overflow: 'hidden', textOverflow: "ellipsis", whiteSpace: 'nowrap', maxWidth: '250px'}}>
-                              {val.lastMessage || 'Send message'}
-                            </Typography>
+                            { val?.read ? (
+                              <Typography variant='body2' color='GrayText' style={{overflow: 'hidden', textOverflow: "ellipsis", whiteSpace: 'nowrap', maxWidth: '250px'}}>
+                                {val.lastMessage || 'Send message'}
+                              </Typography>
+                            ) : (
+                              <Typography variant='body2' style={{overflow: 'hidden', textOverflow: "ellipsis", whiteSpace: 'nowrap', maxWidth: '250px'}}>
+                                <b>{val.lastMessage}</b>
+                              </Typography>                              
+                            )}
                           </div>
                         </div>                      
                   ))}

@@ -121,21 +121,26 @@ export const sendMessage = (selectedConvoId, chatMsg, currentUser, setRooms) => 
     if(roomRef.exists())
     {
         await updateDoc(doc(db, 'rooms', selectedConvoId), {
-            lastMessage: chatMsg
+            lastMessage: chatMsg,
+            read: false
         })
         for(let i = 0; i < roomRef.data().memberId.length; i++)
         {
             const userInRoomRef = await getDoc(doc(db, 'users', roomRef.data().memberId[i]))
             const dummy = !userInRoomRef.data().update
+            const newChatrooms = userInRoomRef.data().chatrooms.filter(roomId => roomId !== selectedConvoId)
                 await updateDoc(doc(db, 'users', userInRoomRef.id), {
-                    chatrooms: arrayUnion(selectedConvoId),
+                    chatrooms: [selectedConvoId, ...newChatrooms],
                     update: dummy
                 })}
     }
 }
 
 export const getConversation = (convoId, setMessages) => async (dispatch) => {
-    await onSnapshot(doc(db, 'conversations', convoId), (doc) => {
+    await updateDoc(doc(db, 'rooms', convoId), {
+        read: true
+    })
+    await onSnapshot(doc(db, 'conversations', convoId), async (doc) => {
         if (doc.exists()) {   
             setMessages(doc.data().messages)
         } 
