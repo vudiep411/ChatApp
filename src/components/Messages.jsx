@@ -1,22 +1,32 @@
-import React, { useState }from 'react'
+import React, { useRef, useState }from 'react'
 import { Avatar, Typography } from '@mui/material'
 import ChatField from './ChatField'
 import { convert } from '../utils/functions'
 import { useMediaQuery } from 'react-responsive'
+import { useEffect } from 'react'
+import { ref } from 'firebase/storage'
 
 const Messages = ({ selectedConvoId, messages, setRooms }) => {
     const [chatMsg, setChatMsg] = useState('')
     const isTabletOrMobile = useMediaQuery({ query: '(max-width: 499px)' })
     const height = isTabletOrMobile ? '82vh' : '87vh'
+    const dummy = useRef()
+
+    useEffect(() => {
+        if(selectedConvoId)
+            dummy.current.scrollIntoView();        
+    }, [messages, selectedConvoId])
+     
   return (
     <div 
         style={{
             marginTop: '64px', 
             width: '100vw',
             padding: '5px'
-          }}>
+          }}        
+    >
           {selectedConvoId && 
-              <div style={{height: height, overflowY: 'scroll',}}>
+              <div style={{height: height, overflowY: 'scroll'}}>
                   {messages?.map((val, i) => {
                     const formatDate = convert(val.date.toDate().toString())
                     return (
@@ -33,7 +43,8 @@ const Messages = ({ selectedConvoId, messages, setRooms }) => {
                          </div>
                      </div>
                     )
-                    })}
+                })}
+                <span ref={dummy}></span>
              </div>
          }
          { selectedConvoId &&
