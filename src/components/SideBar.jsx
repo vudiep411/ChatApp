@@ -11,6 +11,7 @@ const SideBar = ({ selectedConvoId, setSelectedConvoId, rooms, setRooms, setMess
   const userProfile = useSelector(state => state.user)
   const dispatch = useDispatch()
 
+
   // const filtered = !searchText ? rooms :
   // rooms.filter(
   //   (user) => user
@@ -35,7 +36,12 @@ const SideBar = ({ selectedConvoId, setSelectedConvoId, rooms, setRooms, setMess
             borderRight: '1px solid rgb(208,208,208)'
             }}>
             <div style={{ marginTop: '90px', padding: '10px'}}>
-              <SearchBar searchText={searchText} setSearchText={setSearchText} setSelectedConvoId={setSelectedConvoId} setRooms={setRooms}/>
+              <SearchBar 
+                searchText={searchText} 
+                setSearchText={setSearchText} 
+                setSelectedConvoId={setSelectedConvoId} 
+                setRooms={setRooms} 
+                setMessages={setMessages}/>
               { rooms?.map((val) => (
                 <div 
                   className={selectedConvoId === val.id ? 'active-person' : 'person'} 
@@ -43,7 +49,7 @@ const SideBar = ({ selectedConvoId, setSelectedConvoId, rooms, setRooms, setMess
                   onClick={() => handleSelectedConvo(val.id)}
                 >
                   {
-                    val.members.filter(mem => mem.id !== userProfile.id).map(user => 
+                    val?.members?.filter(mem => mem.id !== userProfile.id).map(user => 
                       (
                         <div style={{display: 'flex', gap: '15px'}} key={user.id}>
                           <Avatar sx={{width: 50, height: 50}} src={user.image}></Avatar>
