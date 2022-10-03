@@ -14,9 +14,15 @@ const ChatField = ({ chatMsg, setChatMsg, selectedConvoId, setRooms }) => {
         setChatMsg('')
         dispatch(sendMessage(selectedConvoId, chatMsg, user, setRooms))
     }
+    const handleKeydown = (e) => {
+        if(e.key === 'Enter') {
+            e.preventDefault()
+            handleSend()
+          }
+    }
 
   return (
-        <FormControl fullWidth>
+        <FormControl fullWidth onKeyDown={(e) => handleKeydown(e)}>
             <OutlinedInput
                 size="small"
                 id="outlined-adornment-amount"
