@@ -78,7 +78,7 @@ export const createOrSelectChatRoom = async (id, currentId, setSelectedConvoId, 
 
 }
 
-export const getChatRooms = async (currentId, setRooms) => {
+export const getChatRooms = (currentId) =>  async(dispatch) => {
     const d = doc
     await onSnapshot(doc(db, 'users', currentId), async (doc) => {
         if (doc.exists()) {
@@ -90,12 +90,12 @@ export const getChatRooms = async (currentId, setRooms) => {
                     rooms.push({id: roomData.id, ...roomData.data()})
                 }
             }
-            setRooms(rooms)          
+            dispatch({type: 'GET_ROOMS', payload: rooms})         
         } 
     })
 }
 
-export const sendMessage = (selectedConvoId, chatMsg, currentUser, setRooms) => async (dispatch) => {
+export const sendMessage = (selectedConvoId, chatMsg, currentUser) => async (dispatch) => {
     const conversations = await getDoc(doc(db, 'conversations', selectedConvoId))
     const messageData = {
         message: chatMsg,
