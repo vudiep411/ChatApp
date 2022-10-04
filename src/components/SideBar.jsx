@@ -4,7 +4,7 @@ import SearchBar from './SearchBar'
 import '../index.css'
 import { useDispatch, useSelector } from 'react-redux'
 import { getConversation } from '../actions/firebase'
-
+import FiberManualRecordIcon from '@mui/icons-material/FiberManualRecord';
 
 const SideBar = ({ selectedConvoId, setSelectedConvoId, setMessages, setShowSideBar }) => {
   const [searchText, setSearchText] = useState('')
@@ -28,7 +28,7 @@ const SideBar = ({ selectedConvoId, setSelectedConvoId, setMessages, setShowSide
   const handleSelectedConvo = (convoId) => {
     setSelectedConvoId(convoId)
     setShowSideBar(false)
-    dispatch(getConversation(convoId, setMessages))
+    dispatch(getConversation(convoId, setMessages, setSelectedConvoId))
   }
   return (
     <Grid>
@@ -61,24 +61,34 @@ const SideBar = ({ selectedConvoId, setSelectedConvoId, setMessages, setShowSide
                         <div style={{display: 'flex', gap: '15px'}} key={user.id}>
                           <Avatar sx={{width: 50, height: 50}} src={user.image}></Avatar>
                           <div>
-                            <Typography 
-                              style={{
-                              overflow: 'hidden', 
-                              textOverflow: "ellipsis", 
-                              whiteSpace: 'nowrap', 
-                              maxWidth: '250px'}}>
-                                {user.username}
-                            </Typography>
-                            { val?.read ? (
+                              <Typography 
+                                style={{
+                                overflow: 'hidden', 
+                                textOverflow: "ellipsis", 
+                                whiteSpace: 'nowrap', 
+                                maxWidth: '250px'}}>
+                                  {user.username}
+                              </Typography>
+                            { val.lastSender === userProfile.id ? 
+                            (
                               <Typography variant='body2' color='GrayText' style={{overflow: 'hidden', textOverflow: "ellipsis", whiteSpace: 'nowrap', maxWidth: '250px'}}>
-                                {val.lastMessage || 'Send message'}
+                                {(`You: ` + val.lastMessage) || 'Send message'}
                               </Typography>
                             ) : (
-                              <Typography variant='body2' style={{overflow: 'hidden', textOverflow: "ellipsis", whiteSpace: 'nowrap', maxWidth: '250px'}}>
-                                <b>{val.lastMessage || 'Send message'}</b>
-                              </Typography>                              
-                            )}
+                            <div>
+                              { val?.read ? (
+                                <Typography variant='body2' color='GrayText' style={{overflow: 'hidden', textOverflow: "ellipsis", whiteSpace: 'nowrap', maxWidth: '250px'}}>
+                                  {val.lastMessage || 'Send message'}
+                                </Typography>
+                              ) : (
+                                <Typography variant='body2' style={{overflow: 'hidden', textOverflow: "ellipsis", whiteSpace: 'nowrap', maxWidth: '250px'}}>
+                                  <b>{val.lastMessage || 'Send message'}</b>
+                                </Typography>                              
+                              )}
+                            </div>)
+                            }
                           </div>
+                            {/* <p style={{position: 'static'}}><FiberManualRecordIcon fontSize='small' color='primary'/></p> */}
                         </div>                      
                   ))}
               </div>

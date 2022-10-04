@@ -9,11 +9,12 @@ import { Avatar } from '@mui/material';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
 import '../index.css'
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 
 const SearchBar = ({ setSearchText, searchText, setSelectedConvoId, setMessages, setShowSideBar }) => {
   const [users, setUsers] = useState()
   const userProfile = useSelector(state => state.user)
+  const dispatch = useDispatch()
 
   const handleKeydown = async (e) => {
     if(e.key === 'Enter') {
@@ -30,7 +31,7 @@ const SearchBar = ({ setSearchText, searchText, setSelectedConvoId, setMessages,
     setUsers(null)
     setSearchText('')
     setShowSideBar(false)
-    await createOrSelectChatRoom(id, userProfile.id, setSelectedConvoId, setMessages)
+    dispatch(createOrSelectChatRoom(id, userProfile.id, setSelectedConvoId, setMessages))
   }
 
   const handleCloseSearch = () => {
