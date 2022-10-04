@@ -4,7 +4,6 @@ import ChatField from './ChatField'
 import { convert } from '../utils/functions'
 import { useMediaQuery } from 'react-responsive'
 import { useEffect } from 'react'
-import { ref } from 'firebase/storage'
 
 const Messages = ({ selectedConvoId, messages, setRooms }) => {
     const [chatMsg, setChatMsg] = useState('')
