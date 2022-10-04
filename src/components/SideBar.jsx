@@ -6,11 +6,12 @@ import { useDispatch, useSelector } from 'react-redux'
 import { getConversation } from '../actions/firebase'
 
 
-const SideBar = ({ selectedConvoId, setSelectedConvoId, rooms, setRooms, setMessages, setShowSideBar }) => {
+const SideBar = ({ selectedConvoId, setSelectedConvoId, setMessages, setShowSideBar }) => {
   const [searchText, setSearchText] = useState('')
   const userProfile = useSelector(state => state.user)
   const dispatch = useDispatch()
 
+  const rooms = useSelector(state => state.rooms)
 
   const filtered = !searchText ? rooms :
   rooms.filter(
@@ -45,7 +46,6 @@ const SideBar = ({ selectedConvoId, setSelectedConvoId, rooms, setRooms, setMess
                 searchText={searchText} 
                 setSearchText={setSearchText} 
                 setSelectedConvoId={setSelectedConvoId} 
-                setRooms={setRooms} 
                 setMessages={setMessages}
                 setShowSideBar={setShowSideBar}
                 />
@@ -75,7 +75,7 @@ const SideBar = ({ selectedConvoId, setSelectedConvoId, rooms, setRooms, setMess
                               </Typography>
                             ) : (
                               <Typography variant='body2' style={{overflow: 'hidden', textOverflow: "ellipsis", whiteSpace: 'nowrap', maxWidth: '250px'}}>
-                                <b>{val.lastMessage}</b>
+                                <b>{val.lastMessage || 'Send message'}</b>
                               </Typography>                              
                             )}
                           </div>

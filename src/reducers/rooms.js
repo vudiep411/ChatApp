@@ -1,9 +1,7 @@
 export default (state = [], action) => {
     switch(action.type) {
-        case 'GET_CONVO':
+        case 'GET_ROOMS':
             return action.payload
-        case 'POST_CONVO': 
-            return []
         case 'LOGOUT':
             return null
         default:

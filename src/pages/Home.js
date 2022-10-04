@@ -12,16 +12,13 @@ import ArrowBackIosNewIcon from '@mui/icons-material/ArrowBackIosNew';
 const Home = () => {
   const [selectedConvoId, setSelectedConvoId] = useState('')
   const userProfile = useSelector(state => state.user)
-  const [rooms, setRooms] = useState([])
   const [messages, setMessages] = useState([])
+  const dispatch = useDispatch()
 
   const [showSideBar, setShowSideBar] = useState(true)
 
   useEffect(() => {
-    const getRooms = async () => {
-      await getChatRooms(userProfile.id, setRooms)
-    }
-    getRooms()
+      dispatch(getChatRooms(userProfile.id))
   }, [userProfile])
   
   const handleOpenSideBar = () => {
@@ -37,15 +34,12 @@ const Home = () => {
           <SideBar 
             selectedConvoId={selectedConvoId} 
             setSelectedConvoId={setSelectedConvoId} 
-            rooms={rooms} 
-            setRooms={setRooms}
             setMessages={setMessages}
             setShowSideBar={setShowSideBar}
           />
           <Messages 
             selectedConvoId={selectedConvoId}
             messages={messages}
-            setRooms={setRooms}
           />
         </div>
       </MediaQuery>
@@ -66,8 +60,6 @@ const Home = () => {
               <SideBar 
                 selectedConvoId={selectedConvoId} 
                 setSelectedConvoId={setSelectedConvoId} 
-                rooms={rooms} 
-                setRooms={setRooms}
                 setMessages={setMessages}
                 setShowSideBar={setShowSideBar}
               />
@@ -76,7 +68,6 @@ const Home = () => {
             <Messages 
               selectedConvoId={selectedConvoId}
               messages={messages}
-              setRooms={setRooms}
             />
           }
         </div>

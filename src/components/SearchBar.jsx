@@ -3,7 +3,7 @@ import FormControl from '@mui/material/FormControl';
 import OutlinedInput from '@mui/material/OutlinedInput';
 import InputAdornment from '@mui/material/InputAdornment';
 import SearchIcon from '@mui/icons-material/Search';
-import { createOrSelectChatRoom, getChatRooms, getSearchUser } from '../actions/firebase';
+import { createOrSelectChatRoom, getSearchUser } from '../actions/firebase';
 import { Typography, Paper, Button } from '@mui/material';
 import { Avatar } from '@mui/material';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
@@ -11,7 +11,7 @@ import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
 import '../index.css'
 import { useSelector } from 'react-redux';
 
-const SearchBar = ({ setSearchText, searchText, setSelectedConvoId, setRooms, setMessages, setShowSideBar }) => {
+const SearchBar = ({ setSearchText, searchText, setSelectedConvoId, setMessages, setShowSideBar }) => {
   const [users, setUsers] = useState()
   const userProfile = useSelector(state => state.user)
 
@@ -30,7 +30,7 @@ const SearchBar = ({ setSearchText, searchText, setSelectedConvoId, setRooms, se
     setUsers(null)
     setSearchText('')
     setShowSideBar(false)
-    await createOrSelectChatRoom(id, userProfile.id, setSelectedConvoId, setMessages, setRooms)
+    await createOrSelectChatRoom(id, userProfile.id, setSelectedConvoId, setMessages)
   }
 
   const handleCloseSearch = () => {
