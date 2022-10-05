@@ -4,7 +4,6 @@ import ChatField from './ChatField'
 import { convert } from '../utils/functions'
 import { useMediaQuery } from 'react-responsive'
 import { useEffect } from 'react'
-import { useDispatch } from 'react-redux'
 import { db } from '../firebase'
 import { doc, onSnapshot } from "firebase/firestore"; 
 
@@ -34,7 +33,6 @@ const Messages = ({ selectedConvoId, messages, setMessages }) => {
                 } else 
                     setMessages({id: '', messages: []})               
             })
-            console.log('here')
             return () => unSub()         
         }
     }, [selectedConvoId])
