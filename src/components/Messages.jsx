@@ -4,18 +4,40 @@ import ChatField from './ChatField'
 import { convert } from '../utils/functions'
 import { useMediaQuery } from 'react-responsive'
 import { useEffect } from 'react'
+import { useDispatch } from 'react-redux'
+import { db } from '../firebase'
+import { doc, onSnapshot } from "firebase/firestore"; 
 
-const Messages = ({ selectedConvoId, messages, setRooms }) => {
+const Messages = ({ selectedConvoId, messages, setMessages }) => {
     const [chatMsg, setChatMsg] = useState('')
     const isTabletOrMobile = useMediaQuery({ query: '(max-width: 499px)' })
     const height = isTabletOrMobile ? '82vh' : '87vh'
     const dummy = useRef()
 
+    // Always scroll to the bottom
     useEffect(() => {
         if(selectedConvoId)
-            dummy.current.scrollIntoView();        
+            dummy.current.scrollIntoView();      
     }, [messages, selectedConvoId])
      
+    // Get live messages
+    useEffect(() => {
+        if(selectedConvoId) {
+            const unSub = onSnapshot(doc(db, 'conversations', selectedConvoId), (doc) => {
+                if (doc.exists()) { 
+                    setMessages(prev => {
+                        if(prev.id) {
+                            return prev.id === doc.id ? {id: doc.id, messages: doc.data().messages} : prev
+                        } else 
+                            return {id: doc.id, messages: doc.data().messages}                       
+                    })
+                } else 
+                    setMessages({id: '', messages: []})               
+            })
+            console.log('here')
+            return () => unSub()         
+        }
+    }, [selectedConvoId])
   return (
     <div 
         style={{
@@ -26,7 +48,7 @@ const Messages = ({ selectedConvoId, messages, setRooms }) => {
     >
           {selectedConvoId && 
               <div style={{height: height, overflowY: 'scroll'}}>
-                  {messages?.map((val, i) => {
+                  {messages.messages?.map((val, i) => {
                     const formatDate = convert(val.date.toDate().toString())
                     return (
                       <div style={{display: 'flex', gap: '15px', padding: '15px'}} key={i}>
@@ -48,7 +70,7 @@ const Messages = ({ selectedConvoId, messages, setRooms }) => {
          }
          { selectedConvoId &&
             <div>
-                <ChatField chatMsg={chatMsg} setChatMsg={setChatMsg} selectedConvoId={selectedConvoId} setRooms={setRooms}/>
+                <ChatField chatMsg={chatMsg} setChatMsg={setChatMsg} selectedConvoId={selectedConvoId}/>
             </div>
          }
     </div>

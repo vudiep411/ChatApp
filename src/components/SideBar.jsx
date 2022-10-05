@@ -28,7 +28,7 @@ const SideBar = ({ selectedConvoId, setSelectedConvoId, setMessages, setShowSide
   const handleSelectedConvo = (convoId) => {
     setSelectedConvoId(convoId)
     setShowSideBar(false)
-    dispatch(getConversation(convoId, setMessages, setSelectedConvoId))
+    dispatch(getConversation(convoId, setMessages))
   }
   return (
     <Grid>

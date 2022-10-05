@@ -7,17 +7,17 @@ import AddCircleIcon from '@mui/icons-material/AddCircle';
 import { useDispatch, useSelector } from 'react-redux';
 import { sendMessage } from '../actions/firebase';
 
-const ChatField = ({ chatMsg, setChatMsg, selectedConvoId, setRooms }) => {
+const ChatField = ({ chatMsg, setChatMsg, selectedConvoId }) => {
     const dispatch = useDispatch()
     const user = useSelector(state => state.user)
     const handleSend = () => {
         setChatMsg('')
-        dispatch(sendMessage(selectedConvoId, chatMsg, user, setRooms))
+        dispatch(sendMessage(selectedConvoId, chatMsg, user))
     }
     const handleKeydown = (e) => {
         if(e.key === 'Enter') {
             e.preventDefault()
-            dispatch(sendMessage(selectedConvoId, chatMsg, user, setRooms))
+            dispatch(sendMessage(selectedConvoId, chatMsg, user))
             setChatMsg('')
           }
     }

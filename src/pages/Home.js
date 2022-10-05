@@ -12,7 +12,7 @@ import ArrowBackIosNewIcon from '@mui/icons-material/ArrowBackIosNew';
 const Home = () => {
   const [selectedConvoId, setSelectedConvoId] = useState('')
   const userProfile = useSelector(state => state.user)
-  const [messages, setMessages] = useState([])
+  const [messages, setMessages] = useState({id: null, messages: []})
   const dispatch = useDispatch()
 
   const [showSideBar, setShowSideBar] = useState(true)
@@ -40,6 +40,7 @@ const Home = () => {
           <Messages 
             selectedConvoId={selectedConvoId}
             messages={messages}
+            setMessages={setMessages}
           />
         </div>
       </MediaQuery>
