@@ -14,7 +14,7 @@ const Messages = ({ selectedConvoId, messages, setMessages }) => {
     const [img, setImg] = useState()
 
     const isTabletOrMobile = useMediaQuery({ query: '(max-width: 499px)' })
-    const height = isTabletOrMobile ? '79vh' : '87vh'
+    const height = isTabletOrMobile ? '75vh' : '87vh'
     const dummy = useRef()
 
     // Always scroll to the bottom
@@ -50,6 +50,7 @@ const Messages = ({ selectedConvoId, messages, setMessages }) => {
     >
           {selectedConvoId && 
               <div style={{height: height, overflowY: 'scroll'}}>
+                  <Typography variant='h4' style={{textAlign: 'center', padding: '20px'}}><b>Start Your Conversation</b></Typography>
                   {messages.messages?.map((val, i) => {
                     const formatDate = convert(val.date.toDate().toString())
                     return (
