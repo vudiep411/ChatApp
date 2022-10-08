@@ -96,7 +96,7 @@ const Messages = ({ selectedConvoId, messages, setMessages }) => {
                     </Button>
                 </div>
             }
-            <div style={{}}>
+            <div>
                 <ChatField 
                     chatMsg={chatMsg} 
                     setChatMsg={setChatMsg} 

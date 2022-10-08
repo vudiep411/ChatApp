@@ -13,7 +13,6 @@ const SideBar = ({ selectedConvoId, setSelectedConvoId, setMessages, setShowSide
   const dispatch = useDispatch()
 
   const rooms = useSelector(state => state.rooms)
-
   const filtered = !searchText ? rooms :
   rooms.filter(
     (room) => room
@@ -49,7 +48,7 @@ const SideBar = ({ selectedConvoId, setSelectedConvoId, setMessages, setShowSide
                 setSelectedConvoId={setSelectedConvoId} 
                 setMessages={setMessages}
                 setShowSideBar={setShowSideBar}
-                />
+              />
               { filtered?.map((val) => (
                 <div 
                   className={selectedConvoId === val.id ? 'active-person' : 'person'} 
@@ -105,13 +104,14 @@ const SideBar = ({ selectedConvoId, setSelectedConvoId, setMessages, setShowSide
                         </div>                      
                   ))}
                   <div style={{width: '100%', textAlign: 'end'}}>
-                    <Typography variant='body2' fontSize={12} color='GrayText'>45m</Typography>
+                  <Typography variant='body2' fontSize={12} color='GrayText'>{moment(new Date(val.date.seconds * 1000).toLocaleString()).fromNow(true)}</Typography>
                     { !val?.read && val.lastSender !== userProfile.id &&
                       <FiberManualRecordIcon fontSize='small' color='primary'/>
                     }
                   </div>
               </div>
-              ))}
+              )
+            )}
             </div>
         </div>
     </Grid>

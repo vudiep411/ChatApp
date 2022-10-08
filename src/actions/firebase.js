@@ -47,7 +47,7 @@ export const createOrSelectChatRoom = (id, currentId, setSelectedConvoId, setMes
     const roomData = { 
         memberId: [id, currentId],
         members : roomMembers,
-        date: serverTimestamp(),
+        date: new Date(),
     }
     
     // if user has 0 rooms active
@@ -126,6 +126,7 @@ export const sendMessage = (selectedConvoId, chatMsg, currentUser, url) => async
     const roomRef = await getDoc(doc(db, 'rooms', selectedConvoId))
     if(roomRef.exists()) {
         await updateDoc(doc(db, 'rooms', selectedConvoId), {
+            date: new Date(),
             lastMessage: url ? 'Attachment' : chatMsg,
             lastSender: currentUser.id,
             read: false
@@ -133,9 +134,11 @@ export const sendMessage = (selectedConvoId, chatMsg, currentUser, url) => async
         for(let i = 0; i < roomRef.data().memberId.length; i++) {
             const userInRoomRef = await getDoc(doc(db, 'users', roomRef.data().memberId[i]))
             const dummy = !userInRoomRef.data().update
-            const newChatrooms = userInRoomRef.data().chatrooms.filter(roomId => roomId !== selectedConvoId)
+            // filter out the new room to move that new room to the front
+            const filterChatrooms = userInRoomRef.data()?.chatrooms?.filter(roomId => roomId !== selectedConvoId)
+            const prevChatrooms = filterChatrooms ? filterChatrooms : []
                 await updateDoc(doc(db, 'users', userInRoomRef.id), {
-                    chatrooms: [selectedConvoId, ...newChatrooms],
+                    chatrooms: [selectedConvoId, ...prevChatrooms],
                     update: dummy
                 })
         }
