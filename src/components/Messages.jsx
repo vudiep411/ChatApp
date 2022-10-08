@@ -1,14 +1,18 @@
 import React, { useRef, useState }from 'react'
-import { Avatar, Typography } from '@mui/material'
+import { Avatar, Button, Typography } from '@mui/material'
 import ChatField from './ChatField'
 import { convert } from '../utils/functions'
 import { useMediaQuery } from 'react-responsive'
 import { useEffect } from 'react'
 import { db } from '../firebase'
 import { doc, onSnapshot } from "firebase/firestore"; 
+import DeleteIcon from '@mui/icons-material/Delete';
+import ModalImage from "react-modal-image";
 
 const Messages = ({ selectedConvoId, messages, setMessages }) => {
     const [chatMsg, setChatMsg] = useState('')
+    const [img, setImg] = useState()
+
     const isTabletOrMobile = useMediaQuery({ query: '(max-width: 499px)' })
     const height = isTabletOrMobile ? '82vh' : '87vh'
     const dummy = useRef()
@@ -59,6 +63,15 @@ const Messages = ({ selectedConvoId, messages, setMessages }) => {
                              <Typography variant='body1' style={{marginTop: '2px'}}>
                                  {val.message}
                              </Typography>
+                             { val.contentImage &&
+                             <div style={{maxWidth: '50%', maxHeight: '50%'}}>
+                                 <ModalImage
+                                     large={val.contentImage}
+                                     small={val.contentImage}
+                                     alt='Image'
+                                 />
+                             </div> 
+                             }
                          </div>
                      </div>
                     )
@@ -67,9 +80,32 @@ const Messages = ({ selectedConvoId, messages, setMessages }) => {
              </div>
          }
          { selectedConvoId &&
+         <div>
+            {img && 
+                <div style={{backgroundColor: 'rgb(240,240,240)', display: 'flex', borderRadius: '8px'}}>
+                    <img 
+                        style={{padding: '5px', maxWidth: '30%', maxHeight: '30%'}} 
+                        src={img}
+                        alt="img"
+                    />
+                    <Button color='error' 
+                        style={{height: '20px', width: '20px', marginTop: '5px'}}
+                        onClick={() => setImg(null)}
+                    >    
+                            <DeleteIcon fontSize='small'/>
+                    </Button>
+                </div>
+            }
             <div>
-                <ChatField chatMsg={chatMsg} setChatMsg={setChatMsg} selectedConvoId={selectedConvoId}/>
+                <ChatField 
+                    chatMsg={chatMsg} 
+                    setChatMsg={setChatMsg} 
+                    selectedConvoId={selectedConvoId}
+                    setImg={setImg}
+                    img={img}
+                />
             </div>
+         </div>
          }
     </div>
   )

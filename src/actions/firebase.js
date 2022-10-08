@@ -1,5 +1,5 @@
 import { collection, setDoc, doc, getDocs, query, where, getDoc, updateDoc, arrayUnion, serverTimestamp, onSnapshot } from "firebase/firestore"; 
-import { db } from "../firebase";
+import { db, storage } from "../firebase";
 
 // Create a new User account when first sign in
 export const createOrUpdateUser = async (data, uid) => {
@@ -52,20 +52,20 @@ export const createOrSelectChatRoom = (id, currentId, setSelectedConvoId, setMes
     
     // if user has 0 rooms active
     if(!roomIds) {  
-        await updateDoc(doc(db, 'users', currentId), { 
-            chatrooms: [combinedId]            
-        })
         await setDoc(doc(db, "rooms" , combinedId), {
             ...roomData
+        })
+        await updateDoc(doc(db, 'users', currentId), { 
+            chatrooms: [combinedId]            
         })
     }
     // if user has a chatroom but not this convo
     else if(!roomIds.includes(combinedId)) { 
-        await updateDoc(doc(db, 'users', currentId), {
-            chatrooms: arrayUnion(combinedId)            
-        })
         await setDoc(doc(db, "rooms" , combinedId), {
             ...roomData
+        })
+        await updateDoc(doc(db, 'users', currentId), {
+            chatrooms: arrayUnion(combinedId)            
         })
     }
 
@@ -101,9 +101,10 @@ export const getChatRooms = (currentId) =>  async(dispatch) => {
 }
 
 // Handle sending message
-export const sendMessage = (selectedConvoId, chatMsg, currentUser) => async (dispatch) => {
+export const sendMessage = (selectedConvoId, chatMsg, currentUser, url) => async (dispatch) => {
     const conversations = await getDoc(doc(db, 'conversations', selectedConvoId))
     const messageData = {
+        contentImage: url,
         message: chatMsg,
         uid: currentUser.id,
         username: currentUser.username,

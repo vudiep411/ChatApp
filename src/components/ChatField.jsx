@@ -6,31 +6,64 @@ import SendIcon from '@mui/icons-material/Send';
 import AddCircleIcon from '@mui/icons-material/AddCircle';
 import { useDispatch, useSelector } from 'react-redux';
 import { sendMessage } from '../actions/firebase';
+import { storage } from '../firebase';
+import { ref, uploadBytesResumable, getDownloadURL  } from 'firebase/storage';
+import { useState } from 'react';
+import { Typography } from '@mui/material';
 
-const ChatField = ({ chatMsg, setChatMsg, selectedConvoId }) => {
+const ChatField = ({ chatMsg, setChatMsg, selectedConvoId, setImg, img }) => {
+    const [fileUpload, setFileUpload] = useState()
+    const [isLoading, setIsLoading] = useState(false)
     const dispatch = useDispatch()
     const user = useSelector(state => state.user)
-    const handleSend = () => {
+
+    const handleSend = async () => {
+        let url = null
+
+        // If there is an image
+        if(fileUpload) {
+            const storageRef = ref(storage, fileUpload.name)
+            const uploadTask = uploadBytesResumable(storageRef, fileUpload)
+            setIsLoading(true)
+            uploadTask.on('state_changed',
+            (snapshot) => { // show progress
+                const prog = (snapshot.bytesTransferred / snapshot.totalBytes) * 100 
+            },
+            (error) => console.log(error))
+            await uploadTask
+            url = await getDownloadURL(uploadTask.snapshot.ref)
+        }
+        setIsLoading(false)
+        dispatch(sendMessage(selectedConvoId, chatMsg, user, url))
+        setFileUpload(null)
+        setImg(null)
         setChatMsg('')
-        dispatch(sendMessage(selectedConvoId, chatMsg, user))
     }
     const handleKeydown = (e) => {
         if(e.key === 'Enter' && chatMsg) {
             e.preventDefault()
-            dispatch(sendMessage(selectedConvoId, chatMsg, user))
-            setChatMsg('')
-          }
+            handleSend()
+        }
+    }
+
+    // render the uploaded image on the chatbar
+    const uploadImage = (e) => {
+        const selectedImage = e.target.files[0]
+        setFileUpload(selectedImage)
+        setImg(URL.createObjectURL(selectedImage))
     }
 
   return (
-        <FormControl fullWidth onKeyDown={(e) => handleKeydown(e)}>
+        <FormControl fullWidth onKeyDown={(e) => handleKeydown(e)} style={{backgroundColor: 'rgb(240,240,240)'}}>
             <OutlinedInput
+                multiline
                 size="small"
                 id="outlined-adornment-amount"
                 onChange={(e) => {setChatMsg(e.target.value)}}
                 startAdornment={
                     <InputAdornment position="start" >
                         <input 
+                            onChange={uploadImage}
                             type='file' 
                             id='add'
                             style={{display: 'none'}} 
@@ -43,12 +76,20 @@ const ChatField = ({ chatMsg, setChatMsg, selectedConvoId }) => {
                 }
                 endAdornment={
                     <InputAdornment position="end">
-                        {   chatMsg &&
-                            <SendIcon 
-                                color='primary'
-                                style={{cursor: 'pointer'}}
-                                onClick={handleSend}    
-                            />
+                        { (chatMsg || fileUpload) &&
+                        <div>
+                            {!isLoading ? (
+                                <SendIcon 
+                                    color='primary'
+                                    style={{cursor: 'pointer'}}
+                                    onClick={handleSend}    
+                                />
+                            ) : (
+                                <Typography variant='body2' style={{color: 'gray'}}>
+                                    ...Sending
+                                </Typography>
+                            )}
+                        </div>
                         }
                     </InputAdornment>
                 }
