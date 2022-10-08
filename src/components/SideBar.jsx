@@ -4,7 +4,8 @@ import SearchBar from './SearchBar'
 import '../index.css'
 import { useDispatch, useSelector } from 'react-redux'
 import { getConversation } from '../actions/firebase'
-
+import moment from 'moment/moment'
+import FiberManualRecordIcon from '@mui/icons-material/FiberManualRecord';
 
 const SideBar = ({ selectedConvoId, setSelectedConvoId, setMessages, setShowSideBar }) => {
   const [searchText, setSearchText] = useState('')
@@ -58,7 +59,7 @@ const SideBar = ({ selectedConvoId, setSelectedConvoId, setMessages, setShowSide
                   {
                     val?.members?.filter(mem => mem.id !== userProfile.id).map(user => 
                       (
-                        <div style={{display: 'flex', gap: '15px'}} key={user.id}>
+                        <div style={{display: 'flex', gap: '15px', width: '80%'}} key={user.id}>
                           <Avatar sx={{width: 50, height: 50}} src={user.image}></Avatar>
                           <div>
                             {(val?.read || val.lastSender === userProfile.id) ? (
@@ -103,6 +104,12 @@ const SideBar = ({ selectedConvoId, setSelectedConvoId, setMessages, setShowSide
                           </div>
                         </div>                      
                   ))}
+                  <div style={{width: '100%', textAlign: 'end'}}>
+                    <Typography variant='body2' fontSize={12} color='GrayText'>45m</Typography>
+                    { !val?.read && val.lastSender !== userProfile.id &&
+                      <FiberManualRecordIcon fontSize='small' color='primary'/>
+                    }
+                  </div>
               </div>
               ))}
             </div>

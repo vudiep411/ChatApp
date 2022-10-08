@@ -126,7 +126,7 @@ export const sendMessage = (selectedConvoId, chatMsg, currentUser, url) => async
     const roomRef = await getDoc(doc(db, 'rooms', selectedConvoId))
     if(roomRef.exists()) {
         await updateDoc(doc(db, 'rooms', selectedConvoId), {
-            lastMessage: chatMsg,
+            lastMessage: url ? 'Attachment' : chatMsg,
             lastSender: currentUser.id,
             read: false
         })
