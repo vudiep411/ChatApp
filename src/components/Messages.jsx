@@ -14,7 +14,7 @@ const Messages = ({ selectedConvoId, messages, setMessages }) => {
     const [img, setImg] = useState()
 
     const isTabletOrMobile = useMediaQuery({ query: '(max-width: 499px)' })
-    const height = isTabletOrMobile ? '81vh' : '87vh'
+    const height = isTabletOrMobile ? '79vh' : '87vh'
     const dummy = useRef()
 
     // Always scroll to the bottom
@@ -96,7 +96,7 @@ const Messages = ({ selectedConvoId, messages, setMessages }) => {
                     </Button>
                 </div>
             }
-            <div>
+            <div style={{}}>
                 <ChatField 
                     chatMsg={chatMsg} 
                     setChatMsg={setChatMsg} 
