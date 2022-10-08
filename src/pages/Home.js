@@ -51,11 +51,13 @@ const Home = () => {
               marginTop: '60px', 
               cursor: 'pointer', 
               position: 'absolute',
-              left: '5px'
+              left: '5px',
+              position: 'fixed',
+              zIndex: '999'
             }}
             onClick={handleOpenSideBar}
             >
-              {showSideBar ? <ArrowBackIosNewIcon/> : <MenuIcon/>}
+              {!showSideBar && <MenuIcon fontSize='large'/>}
           </p>
           {showSideBar && 
               <SideBar 
@@ -68,6 +70,7 @@ const Home = () => {
           {selectedConvoId &&
             <Messages 
               selectedConvoId={selectedConvoId}
+              setMessages={setMessages}
               messages={messages}
             />
           }

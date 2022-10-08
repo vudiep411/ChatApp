@@ -44,7 +44,7 @@ const ChatNavbar = () => {
                 sx={{ 
                       backgroundImage: 'linear-gradient(to right, rgb(236, 72, 153), rgb(239, 68, 68), rgb(234, 179, 8))',
                       WebkitBackgroundClip: "text",
-                      WebkitTextFillColor: "transparent"
+                      WebkitTextFillColor: "transparent",
                     }}
               >
                 <b>ChatApp</b>
