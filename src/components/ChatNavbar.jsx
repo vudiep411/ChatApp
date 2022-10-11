@@ -32,6 +32,8 @@ const ChatNavbar = () => {
       auth.signOut()
       dispatch({type: 'LOGOUT'})
       navigate('/login')
+    } else if(setting === 'Profile') {
+      navigate(`/${user.id}`)
     }
   }
 
@@ -45,7 +47,9 @@ const ChatNavbar = () => {
                       backgroundImage: 'linear-gradient(to right, rgb(236, 72, 153), rgb(239, 68, 68), rgb(234, 179, 8))',
                       WebkitBackgroundClip: "text",
                       WebkitTextFillColor: "transparent",
+                      cursor: 'pointer'
                     }}
+                  onClick={() => navigate('/')}
               >
                 <b>ChatApp</b>
               </Typography>

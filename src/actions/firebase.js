@@ -83,7 +83,7 @@ export const createOrSelectChatRoom = (id, currentId, setSelectedConvoId, setMes
 }
 
 // Get chatrooms for Sidebar display
-export const getChatRooms = (currentId) =>  async(dispatch) => {
+export const getChatRooms = (currentId) => async(dispatch) => {
     const d = doc
     await onSnapshot(doc(db, 'users', currentId), async (doc) => {
         if (doc.exists()) {
