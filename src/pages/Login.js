@@ -5,6 +5,8 @@ import Navbar from '../components/Navbar'
 import GoogleIcon from '@mui/icons-material/Google';
 import FacebookIcon from '@mui/icons-material/Facebook';
 import Background from '../utils/Background';
+import useSound from 'use-sound';
+// import pop from '../audio/pop.wav'
 
 import { useDispatch } from 'react-redux';
 import {  signInWithPopup, GoogleAuthProvider } from 'firebase/auth';
@@ -17,6 +19,7 @@ const Login = () => {
     const provider = new GoogleAuthProvider();
     const dispatch = useDispatch()
     const navigate = useNavigate()
+    // const [play] = useSound(pop)
 
     const handleSignIn = () => {
         signInWithPopup(auth, provider)
@@ -90,7 +93,10 @@ const Login = () => {
                             </Button>
                         </div>
                         <div style={{display: 'flex', justifyContent: 'center', marginTop: '50px'}}>
-                            <Button variant='contained' sx={{ color: 'white', backgroundColor: '#3b5998'}}><FacebookIcon/>&nbsp;&nbsp;Sign in with Facebook</Button>
+                            <Button 
+                                variant='contained' 
+                                sx={{ color: 'white', backgroundColor: '#3b5998'}}
+                            ><FacebookIcon/>&nbsp;&nbsp;Sign in with Facebook</Button>
                         </div>
                     </div>
                 </div>            

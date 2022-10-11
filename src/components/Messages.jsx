@@ -26,13 +26,15 @@ const Messages = ({ selectedConvoId, messages, setMessages }) => {
     // Get live messages
     useEffect(() => {
         if(selectedConvoId) {
+            
             const unSub = onSnapshot(doc(db, 'conversations', selectedConvoId), (doc) => {
                 if (doc.exists()) { 
                     setMessages(prev => {
                         if(prev.id) {
                             return prev.id === doc.id ? {id: doc.id, messages: doc.data().messages} : prev
-                        } else 
+                        } else {
                             return {id: doc.id, messages: doc.data().messages}                       
+                        }
                     })
                 } else 
                     setMessages({id: '', messages: []})               

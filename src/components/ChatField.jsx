@@ -10,10 +10,14 @@ import { storage } from '../firebase';
 import { ref, uploadBytesResumable, getDownloadURL  } from 'firebase/storage';
 import { useState } from 'react';
 import { Typography } from '@mui/material';
+import useSound from 'use-sound'
+import pop from '../audio/pop.wav'
 
 const ChatField = ({ chatMsg, setChatMsg, selectedConvoId, setImg, img }) => {
     const [fileUpload, setFileUpload] = useState()
     const [isLoading, setIsLoading] = useState(false)
+
+    const [playSend] = useSound(pop)
     const dispatch = useDispatch()
     const user = useSelector(state => state.user)
 
@@ -33,6 +37,7 @@ const ChatField = ({ chatMsg, setChatMsg, selectedConvoId, setImg, img }) => {
             await uploadTask
             url = await getDownloadURL(uploadTask.snapshot.ref)
         }
+        playSend()
         setIsLoading(false)
         dispatch(sendMessage(selectedConvoId, chatMsg, user, url))
         setFileUpload(null)
