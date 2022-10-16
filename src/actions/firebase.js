@@ -1,17 +1,21 @@
-import { collection, setDoc, doc, getDocs, query, where, getDoc, updateDoc, arrayUnion, serverTimestamp, onSnapshot } from "firebase/firestore"; 
-import { db, storage } from "../firebase";
+import { collection, setDoc, doc, getDocs, query, where, getDoc, updateDoc, arrayUnion, onSnapshot } from "firebase/firestore"; 
+import { db } from "../firebase";
 
 // Create a new User account when first sign in
-export const createOrUpdateUser = async (data, uid) => {
+export const createOrUpdateUser = (data, uid, navigate) => async (dispatch) => {
     const user = await getDoc(doc(db, 'users', uid))
 
-    if(!user.exists())
-    { 
+    if(!user.exists()) { 
         await setDoc(doc(db, "users" , uid), {
             data,
             update: false   
         }, {merge: true})
+        dispatch({type: 'AUTH_USER', payload: {...data, id: uid}})
+    } else {
+        const username = user.data().data.username
+        dispatch({type: 'AUTH_USER', payload: {...data, id: uid, username: username}})
     }
+    navigate('/')
 }
 
 // Query Search user

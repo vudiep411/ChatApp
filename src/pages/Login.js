@@ -5,8 +5,6 @@ import Navbar from '../components/Navbar'
 import GoogleIcon from '@mui/icons-material/Google';
 import FacebookIcon from '@mui/icons-material/Facebook';
 import Background from '../utils/Background';
-import useSound from 'use-sound';
-// import pop from '../audio/pop.wav'
 
 import { useDispatch } from 'react-redux';
 import {  signInWithPopup, GoogleAuthProvider } from 'firebase/auth';
@@ -19,7 +17,6 @@ const Login = () => {
     const provider = new GoogleAuthProvider();
     const dispatch = useDispatch()
     const navigate = useNavigate()
-    // const [play] = useSound(pop)
 
     const handleSignIn = () => {
         signInWithPopup(auth, provider)
@@ -33,11 +30,11 @@ const Login = () => {
             const data = {
                 name: user.displayName,
                 username: user.displayName,
-                image: user.photoURL,             
+                image: user.photoURL,   
+                update: false,
+                bio: '',          
             }
-              dispatch({type: 'AUTH_USER', payload: {...data, id: user.uid}})
-            createOrUpdateUser(data, user.uid)
-            navigate('/')
+            dispatch(createOrUpdateUser(data, user.uid, navigate))
           }
         }).catch((error) => {
             // Handle Errors here.

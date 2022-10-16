@@ -1,11 +1,10 @@
-import { Avatar, Button, Divider, TextField, Typography } from '@mui/material'
+import { Avatar, Button, TextField, Typography } from '@mui/material'
 import { Container } from '@mui/system'
-import React, { useEffect, useState } from 'react'
-import { useDispatch, useSelector } from 'react-redux'
-import { useParams } from 'react-router-dom'
-import { getUser } from '../actions/user'
+import React, {  useState } from 'react'
+import { useSelector } from 'react-redux'
 import ChatNavbar from '../components/ChatNavbar'
 import { useMediaQuery } from 'react-responsive'
+import ChangeUserName from '../components/profile/ChangeUserName'
 
 const Profile = () => {
     const isTabletOrMobile = useMediaQuery({ query: '(max-width: 499px)' })
@@ -14,8 +13,6 @@ const Profile = () => {
     const user = useSelector(state => state.user)
 
     const [bio, setBio] = useState('')
-    const [username, setUsername] = useState(user.username)
-    const [image, setImage] = useState(user.image)
    
   return (
     <div>
@@ -23,7 +20,7 @@ const Profile = () => {
         <Container maxWidth='md' sx={{marginTop: '100px'}}>
             <div style={{display: layout, gap: gap}}>
                 <Avatar
-                    src={image}
+                    src={user.image}
                     sx={{
                     cursor: 'pointer',
                     display: { xs: 'none', md: 'block' },
@@ -32,7 +29,7 @@ const Profile = () => {
                     }}
                 >V</Avatar>
                 <Avatar
-                    src={image}
+                    src={user.image}
                     sx={{
                     cursor: 'pointer',
                     display: { xs: 'block', md: 'none' },
@@ -46,12 +43,7 @@ const Profile = () => {
                     <div style={{marginTop: '50px'}}>
                         <Typography variant='h5'>Change username</Typography>
                         <hr/><br/>
-                        <Button 
-                            style={{textTransform: 'none'}}
-                            variant='contained' 
-                            color='inherit'>
-                            <b>Change username</b>
-                        </Button>
+                    <ChangeUserName/>
                     </div>
                     <div style={{marginTop: '50px'}}>
                         <Typography variant='h5'>Add a bio</Typography>
