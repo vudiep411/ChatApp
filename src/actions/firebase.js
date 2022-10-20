@@ -171,5 +171,4 @@ export const getConversation = (convoId, setMessages) => async (dispatch) => {
     if(message.exists()) {
         setMessages({id: message.id, messages: message.data().messages})
     }
-
 }
