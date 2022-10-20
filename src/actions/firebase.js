@@ -18,6 +18,7 @@ export const createOrUpdateUser = (data, uid, navigate) => async (dispatch) => {
     navigate('/')
 }
 
+
 // Query Search user
 export const getSearchUser = async (username, setUsers, currentId) => {
     const userRef = collection(db, "users")
@@ -38,19 +39,14 @@ export const getSearchUser = async (username, setUsers, currentId) => {
 
 // Create a room if not exist on new usersd
 export const createOrSelectChatRoom = (id, currentId, setSelectedConvoId, setMessages) => async (dispatch) => {
-    const userRef = doc(db, 'users', id)
-    const userSnap = await getDoc(userRef)
-
     const currentUserRef = doc(db, 'users', currentId)
     const currentUserSnap = await getDoc(currentUserRef)
 
     const roomIds = currentUserSnap.data().chatrooms
     const combinedId = currentId > id ? currentId + id : id + currentId
 
-    const roomMembers = [{...userSnap.data().data, id: userSnap.id}, {...currentUserSnap.data().data, id: currentUserSnap.id}]
     const roomData = { 
         memberId: [id, currentId],
-        members : roomMembers,
         date: new Date(),
     }
     
@@ -86,23 +82,39 @@ export const createOrSelectChatRoom = (id, currentId, setSelectedConvoId, setMes
 
 }
 
+
 // Get chatrooms for Sidebar display
 export const getChatRooms = (currentId) => async(dispatch) => {
     const d = doc
+    // Get real time user's chatrooms to display on sidebar
     await onSnapshot(doc(db, 'users', currentId), async (doc) => {
         if (doc.exists()) {
-            const roomListId = doc.data().chatrooms
+            const roomListId = doc.data().chatrooms    
             let rooms = []
+
             if(roomListId) {
+                let members = []
+
                 for(let i = 0; i < roomListId.length; i++) {
                     const roomData = await getDoc(d(db, 'rooms', roomListId[i]))
-                    rooms.push({id: roomData.id, ...roomData.data()})
+                    const memberIdArray = roomData.data().memberId
+
+                    for(let i = 0; i < memberIdArray.length; i++) {
+                        const memberData = await getDoc(d(db, 'users', memberIdArray[i]))
+
+                        if(memberData.exists() && memberData.id !== currentId) {
+                            members.push({...memberData.data().data, id: memberData.id})
+                        }
+                    }
+                    rooms.push({id: roomData.id, ...roomData.data(), members: members})
+                    members = []
                 }
             }
             dispatch({type: 'GET_ROOMS', payload: rooms})         
         } 
     })
 }
+
 
 // Handle sending message
 export const sendMessage = (selectedConvoId, chatMsg, currentUser, url) => async (dispatch) => {

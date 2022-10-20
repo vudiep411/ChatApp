@@ -24,7 +24,6 @@ const SideBar = ({ selectedConvoId, setSelectedConvoId, setMessages, setShowSide
       .includes(searchText.toLowerCase()))
     )
 
-
   const handleSelectedConvo = (convoId) => {
     setSelectedConvoId(convoId)
     setShowSideBar(false)
@@ -56,7 +55,7 @@ const SideBar = ({ selectedConvoId, setSelectedConvoId, setMessages, setShowSide
                   onClick={() => handleSelectedConvo(val.id)}
                 >
                   {
-                    val?.members?.filter(mem => mem.id !== userProfile.id).map(user => 
+                    val?.members?.map(user => 
                       (
                         <div style={{display: 'flex', gap: '15px', width: '80%'}} key={user.id}>
                           <Avatar sx={{width: 50, height: 50}} src={user.image}></Avatar>
@@ -104,7 +103,7 @@ const SideBar = ({ selectedConvoId, setSelectedConvoId, setMessages, setShowSide
                         </div>                      
                   ))}
                   <div style={{width: '100%', textAlign: 'end'}}>
-                  <Typography variant='body2' fontSize={12} color='GrayText'>{moment(new Date(val.date.seconds * 1000).toLocaleString()).fromNow(true)}</Typography>
+                  <Typography variant='body2' fontSize={12} color='GrayText'>{moment(new Date(val.date.seconds * 1000).toISOString()).fromNow(true)}</Typography>
                     { !val?.read && val.lastSender !== userProfile.id &&
                       <FiberManualRecordIcon fontSize='small' color='primary'/>
                     }
