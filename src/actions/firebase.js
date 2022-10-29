@@ -121,8 +121,8 @@ export const sendMessage = (selectedConvoId, chatMsg, currentUser, url) => async
         contentImage: url,
         message: chatMsg,
         uid: currentUser.id,
-        username: currentUser.name,
         image: currentUser.image,
+        username: currentUser.username,
         date: new Date()
     }
 
@@ -167,6 +167,20 @@ export const getConversation = (convoId, setMessages) => async (dispatch) => {
     dispatch({type: 'READ_MSG', payload: convoId})
     const message = await getDoc(doc(db, 'conversations', convoId))
     if(message.exists()) {
-        setMessages({id: message.id, messages: message.data().messages})
+        const messagesArr = []
+        for(let i = 0; i < message.data().messages.length; i++) {
+            const userId = message.data().messages[i].uid
+            const userData = await getDoc(doc(db, 'users', userId))
+            if(userData) {
+                messagesArr.push({...message.data().messages[i], 
+                                image: userData.data().data.image,
+                                username: userData.data().data.username
+                            })
+            }
+        }
+        setMessages({
+            id: message.id, 
+            messages: messagesArr, 
+        })
     }
 }

@@ -1,11 +1,12 @@
-import { collection, setDoc, doc, getDocs, query, where, getDoc, updateDoc, arrayUnion, serverTimestamp, onSnapshot } from "firebase/firestore"; 
-import { db, storage } from "../firebase";
+import {  doc, getDoc } from "firebase/firestore"; 
+import { db } from "../firebase";
 
 export const getUser = (userId) => async (dispatch) => {
     const user = await getDoc(doc(db, 'users', userId))
     if(user.exists()) {
-        console.log(user.data())
+        dispatch({type: 'SET_USER_BIO', payload: user.data().data.bio})
     } else {
         console.log('No documents')
     }
 }
+

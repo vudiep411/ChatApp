@@ -1,19 +1,36 @@
 import { Avatar, Button, TextField, Typography } from '@mui/material'
 import { Container } from '@mui/system'
 import React, {  useState } from 'react'
-import { useSelector } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import ChatNavbar from '../components/ChatNavbar'
 import { useMediaQuery } from 'react-responsive'
 import ChangeUserName from '../components/profile/ChangeUserName'
+import { doc, updateDoc } from "firebase/firestore";
+import { db } from '../firebase';
+import { useEffect } from 'react'
+import { getUser } from '../actions/user'
 
 const Profile = () => {
     const isTabletOrMobile = useMediaQuery({ query: '(max-width: 499px)' })
     const gap = isTabletOrMobile ? '30px' : '100px'
     const layout = isTabletOrMobile ? '' : 'flex'
     const user = useSelector(state => state.user)
+    const dispatch = useDispatch()
 
     const [bio, setBio] = useState('')
-   
+    const addBio = async () => {
+        await updateDoc(doc(db, 'users', user.id), {
+            "data.bio": bio
+        })
+        dispatch({type: 'CHANGE_BIO', payload: bio})
+        setBio('')
+    }
+
+    useEffect(() => {
+        if(user.id) {
+            dispatch(getUser(user.id))
+        }
+    }, [dispatch, user.id])
   return (
     <div>
         <ChatNavbar/>
@@ -39,7 +56,8 @@ const Profile = () => {
                 >V</Avatar>
                 <div style={{marginTop: '10px', width: '100%'}}>
                     <Typography variant='h4' style={{marginBottom: '10px'}}>{user.username}</Typography>
-                    <Typography variant='body2'>&nbsp;{user.name}</Typography>
+                    <Typography variant='body2'>&nbsp;{user.name}</Typography><br/>
+                    <Typography variant='body2'>&nbsp;{user?.bio}</Typography>
                     <div style={{marginTop: '50px'}}>
                         <Typography variant='h5'>Change username</Typography>
                         <hr/><br/>
@@ -54,11 +72,12 @@ const Profile = () => {
                             multiline
                             minRows={4}
                             onChange={(e) => setBio(e.target.value)}
+                            value={bio}
                         />
                     {bio &&
                         <div style={{display: 'flex', justifyContent: 'flex-end', gap: '10px', marginTop: '5px'}}>
-                            <Button variant='contained' color='success'>Add</Button>
-                            <Button variant='contained' color='inherit'>Cancel</Button>
+                            <Button variant='contained' color='success' onClick={addBio}>Add</Button>
+                            <Button variant='contained' color='inherit' onClick={() => setBio('')}>Cancel</Button>
                         </div>
                     }
                     </div>

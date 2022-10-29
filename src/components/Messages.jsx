@@ -10,13 +10,14 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import ModalImage from "react-modal-image";
 import { useSelector } from 'react-redux'
 
-const Messages = ({ messages, setMessages }) => {
+const Messages = ({  messages, setMessages }) => {
     const [chatMsg, setChatMsg] = useState('')
     const [img, setImg] = useState()
     const selectedConvoId = useSelector(state => state.selectedConvo)
 
     const isTabletOrMobile = useMediaQuery({ query: '(max-width: 499px)' })
     const height = isTabletOrMobile ? '75vh' : '87vh'
+    const scale = isTabletOrMobile ? '50%' : '30%'
     const dummy = useRef()
 
     // Always scroll to the bottom
@@ -28,7 +29,6 @@ const Messages = ({ messages, setMessages }) => {
     // Get live messages
     useEffect(() => {
         if(selectedConvoId) {
-            
             const unSub = onSnapshot(doc(db, 'conversations', selectedConvoId), (doc) => {
                 if (doc.exists()) { 
                     setMessages(prev => {
@@ -43,7 +43,8 @@ const Messages = ({ messages, setMessages }) => {
             })
             return () => unSub()         
         }
-    }, [selectedConvoId])
+    }, [selectedConvoId, setMessages])
+    
   return (
     <div 
         style={{
@@ -69,7 +70,7 @@ const Messages = ({ messages, setMessages }) => {
                                  {val.message}
                              </Typography>
                              { val.contentImage &&
-                             <div style={{maxWidth: '50%', maxHeight: '50%'}}>
+                             <div style={{maxWidth: scale, maxHeight: scale}}>
                                  <ModalImage
                                      large={val.contentImage}
                                      small={val.contentImage}
@@ -107,6 +108,7 @@ const Messages = ({ messages, setMessages }) => {
                     setChatMsg={setChatMsg} 
                     selectedConvoId={selectedConvoId}
                     setImg={setImg}
+                    img={img}
                 />
             </div>
          </div>
