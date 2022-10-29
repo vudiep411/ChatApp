@@ -1,6 +1,6 @@
 import { combineReducers } from "redux";
 import user from "./user";
 import rooms from "./rooms";
-import conversations from "./conversations";
+import selectedConvo from "./selectedConvo";
 
-export default combineReducers({ user, rooms, conversations })
+export default combineReducers({ user, rooms, selectedConvo })

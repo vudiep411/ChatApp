@@ -38,7 +38,7 @@ export const getSearchUser = async (username, setUsers, currentId) => {
 
 
 // Create a room if not exist on new usersd
-export const createOrSelectChatRoom = (id, currentId, setSelectedConvoId, setMessages) => async (dispatch) => {
+export const createOrSelectChatRoom = (id, currentId, setMessages) => async (dispatch) => {
     const currentUserRef = doc(db, 'users', currentId)
     const currentUserSnap = await getDoc(currentUserRef)
 
@@ -70,13 +70,11 @@ export const createOrSelectChatRoom = (id, currentId, setSelectedConvoId, setMes
     }
 
     // toggle the conversations if already exist to display
-    setSelectedConvoId(combinedId)
+    dispatch({type: 'SET_CONVO', payload: combinedId})
     const convo = await getDoc(doc(db, 'conversations', combinedId))
     if(convo.exists()) {
-        dispatch({type: 'GET_ALL_CONVO', payload: {id:convo.id, messages: convo.data().messages}})
         setMessages({id: convo.id, messages: convo.data().messages})
     } else {
-        dispatch({type: 'EMPTY_OUT_CONVO'})
         setMessages({id: '', messages: []})
     }
 
@@ -123,7 +121,7 @@ export const sendMessage = (selectedConvoId, chatMsg, currentUser, url) => async
         contentImage: url,
         message: chatMsg,
         uid: currentUser.id,
-        username: currentUser.username,
+        username: currentUser.name,
         image: currentUser.image,
         date: new Date()
     }

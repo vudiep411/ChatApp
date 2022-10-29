@@ -13,7 +13,7 @@ import { Typography } from '@mui/material';
 import useSound from 'use-sound'
 import pop from '../audio/pop.wav'
 
-const ChatField = ({ chatMsg, setChatMsg, selectedConvoId, setImg, img }) => {
+const ChatField = ({ chatMsg, setChatMsg, selectedConvoId, setImg }) => {
     const [fileUpload, setFileUpload] = useState()
     const [isLoading, setIsLoading] = useState(false)
 

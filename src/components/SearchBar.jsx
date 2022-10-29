@@ -11,7 +11,7 @@ import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
 import '../index.css'
 import { useDispatch, useSelector } from 'react-redux';
 
-const SearchBar = ({ setSearchText, searchText, setSelectedConvoId, setMessages, setShowSideBar }) => {
+const SearchBar = ({ setSearchText, searchText, setMessages, setShowSideBar }) => {
   const [users, setUsers] = useState()
   const userProfile = useSelector(state => state.user)
   const dispatch = useDispatch()
@@ -31,7 +31,7 @@ const SearchBar = ({ setSearchText, searchText, setSelectedConvoId, setMessages,
     setUsers(null)
     setSearchText('')
     setShowSideBar(false)
-    dispatch(createOrSelectChatRoom(id, userProfile.id, setSelectedConvoId, setMessages))
+    dispatch(createOrSelectChatRoom(id, userProfile.id, setMessages))
   }
 
   const handleCloseSearch = () => {

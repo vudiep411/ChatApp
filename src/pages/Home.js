@@ -7,10 +7,9 @@ import Messages from '../components/Messages'
 import { useDispatch, useSelector } from 'react-redux'
 import { getChatRooms } from '../actions/firebase'
 import MenuIcon from '@mui/icons-material/Menu';
-import ArrowBackIosNewIcon from '@mui/icons-material/ArrowBackIosNew';
 
 const Home = () => {
-  const [selectedConvoId, setSelectedConvoId] = useState('')
+  const selectedConvoId = useSelector(state => state.selectedConvo)
   const userProfile = useSelector(state => state.user)
   const [messages, setMessages] = useState({id: null, messages: []})
   const dispatch = useDispatch()
@@ -19,11 +18,11 @@ const Home = () => {
 
   useEffect(() => {
       dispatch(getChatRooms(userProfile.id))
-  }, [userProfile])
+  }, [userProfile, dispatch])
   
   const handleOpenSideBar = () => {
-    setShowSideBar(prev => !prev)    
-    setSelectedConvoId('')
+    setShowSideBar(prev => !prev) 
+    dispatch({type: 'CLOSE_CONVO'})   
   }
 
   return (
@@ -31,14 +30,11 @@ const Home = () => {
       <ChatNavbar/>
       <MediaQuery minWidth={500}>
         <div style={{display: 'flex'}}>
-          <SideBar 
-            selectedConvoId={selectedConvoId} 
-            setSelectedConvoId={setSelectedConvoId} 
+          <SideBar  
             setMessages={setMessages}
             setShowSideBar={setShowSideBar}
           />
           <Messages 
-            selectedConvoId={selectedConvoId}
             messages={messages}
             setMessages={setMessages}
           />
@@ -52,7 +48,6 @@ const Home = () => {
               cursor: 'pointer', 
               position: 'absolute',
               left: '5px',
-              position: 'fixed',
               zIndex: '999'
             }}
             onClick={handleOpenSideBar}
@@ -61,15 +56,12 @@ const Home = () => {
           </p>
           {showSideBar && 
               <SideBar 
-                selectedConvoId={selectedConvoId} 
-                setSelectedConvoId={setSelectedConvoId} 
                 setMessages={setMessages}
                 setShowSideBar={setShowSideBar}
               />
           }
           {selectedConvoId &&
             <Messages 
-              selectedConvoId={selectedConvoId}
               setMessages={setMessages}
               messages={messages}
             />

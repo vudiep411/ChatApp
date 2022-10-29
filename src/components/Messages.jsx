@@ -8,10 +8,12 @@ import { db } from '../firebase'
 import { doc, onSnapshot } from "firebase/firestore"; 
 import DeleteIcon from '@mui/icons-material/Delete';
 import ModalImage from "react-modal-image";
+import { useSelector } from 'react-redux'
 
-const Messages = ({ selectedConvoId, messages, setMessages }) => {
+const Messages = ({ messages, setMessages }) => {
     const [chatMsg, setChatMsg] = useState('')
     const [img, setImg] = useState()
+    const selectedConvoId = useSelector(state => state.selectedConvo)
 
     const isTabletOrMobile = useMediaQuery({ query: '(max-width: 499px)' })
     const height = isTabletOrMobile ? '75vh' : '87vh'
@@ -105,7 +107,6 @@ const Messages = ({ selectedConvoId, messages, setMessages }) => {
                     setChatMsg={setChatMsg} 
                     selectedConvoId={selectedConvoId}
                     setImg={setImg}
-                    img={img}
                 />
             </div>
          </div>

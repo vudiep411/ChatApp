@@ -7,9 +7,10 @@ import { getConversation } from '../actions/firebase'
 import moment from 'moment/moment'
 import FiberManualRecordIcon from '@mui/icons-material/FiberManualRecord';
 
-const SideBar = ({ selectedConvoId, setSelectedConvoId, setMessages, setShowSideBar }) => {
+const SideBar = ({  setMessages, setShowSideBar }) => {
   const [searchText, setSearchText] = useState('')
   const userProfile = useSelector(state => state.user)
+  const selectedConvoId = useSelector(state => state.selectedConvo)
   const dispatch = useDispatch()
 
   const rooms = useSelector(state => state.rooms)
@@ -25,7 +26,7 @@ const SideBar = ({ selectedConvoId, setSelectedConvoId, setMessages, setShowSide
     )
 
   const handleSelectedConvo = (convoId) => {
-    setSelectedConvoId(convoId)
+    dispatch({type: 'SET_CONVO', payload: convoId})
     setShowSideBar(false)
     dispatch(getConversation(convoId, setMessages))
   }
@@ -44,7 +45,6 @@ const SideBar = ({ selectedConvoId, setSelectedConvoId, setMessages, setShowSide
               <SearchBar 
                 searchText={searchText} 
                 setSearchText={setSearchText} 
-                setSelectedConvoId={setSelectedConvoId} 
                 setMessages={setMessages}
                 setShowSideBar={setShowSideBar}
               />
