@@ -1,4 +1,4 @@
-import {  doc, getDoc } from "firebase/firestore"; 
+import {  doc, getDoc, updateDoc } from "firebase/firestore"; 
 import { db } from "../firebase";
 
 export const getUser = (userId) => async (dispatch) => {
@@ -10,3 +10,9 @@ export const getUser = (userId) => async (dispatch) => {
     }
 }
 
+export const changeAvatar = (userId, url) => async (dispatch) => {
+    await updateDoc(doc(db, 'users', userId), {
+        "data.image" : url
+    }) 
+    dispatch({type: 'CHANGE_AVATAR', payload: url})
+}

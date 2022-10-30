@@ -13,7 +13,10 @@ export const createOrUpdateUser = (data, uid, navigate) => async (dispatch) => {
         dispatch({type: 'AUTH_USER', payload: {...data, id: uid}})
     } else {
         const username = user.data().data.username
-        dispatch({type: 'AUTH_USER', payload: {...data, id: uid, username: username}})
+        const image = user.data().data.image
+        const bio = user.data().data.bio
+        dispatch({type: 'AUTH_USER', 
+        payload: {...data, id: uid, username: username, image: image, bio: bio}})
     }
     navigate('/')
 }
@@ -168,14 +171,16 @@ export const getConversation = (convoId, setMessages) => async (dispatch) => {
     const message = await getDoc(doc(db, 'conversations', convoId))
     if(message.exists()) {
         const messagesArr = []
+        dispatch({type: 'SET_CONVO', payload: convoId})
         for(let i = 0; i < message.data().messages.length; i++) {
             const userId = message.data().messages[i].uid
             const userData = await getDoc(doc(db, 'users', userId))
             if(userData) {
-                messagesArr.push({...message.data().messages[i], 
-                                image: userData.data().data.image,
-                                username: userData.data().data.username
-                            })
+                messagesArr.push(
+                    {...message.data().messages[i], 
+                        image: userData.data().data.image,
+                        username: userData.data().data.username
+                    })
             }
         }
         setMessages({

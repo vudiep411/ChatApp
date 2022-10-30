@@ -9,6 +9,8 @@ export default (state = null, action) => {
         case 'CHANGE_BIO':
         case 'SET_USER_BIO':
             return {...state, bio: action.payload}
+        case 'CHANGE_AVATAR':
+            return {...state, image: action.payload}
         case 'LOGOUT':
             storage.removeItem('persist:root')
             return null

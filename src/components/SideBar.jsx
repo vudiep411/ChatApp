@@ -26,7 +26,6 @@ const SideBar = ({  setMessages, setShowSideBar }) => {
     )
 
   const handleSelectedConvo = (convoId) => {
-    dispatch({type: 'SET_CONVO', payload: convoId})
     setShowSideBar(false)
     dispatch(getConversation(convoId, setMessages))
   }
