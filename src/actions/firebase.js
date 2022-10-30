@@ -164,28 +164,39 @@ export const sendMessage = (selectedConvoId, chatMsg, currentUser, url) => async
 
 
 export const getConversation = (convoId, setMessages) => async (dispatch) => {
-    await updateDoc(doc(db, 'rooms', convoId), {
-        read: true
-    })
     dispatch({type: 'READ_MSG', payload: convoId})
     const message = await getDoc(doc(db, 'conversations', convoId))
     if(message.exists()) {
         const messagesArr = []
+        const users = {}
+        const userInRoom = await getDoc(doc(db, 'rooms', convoId))
+
+        if(userInRoom.exists()) {
+            const ids = userInRoom.data().memberId
+            for(let i = 0; i < ids.length; i++) {
+                const userData = await getDoc(doc(db, 'users', ids[i]))
+                if(userData) {
+                    users[ids[i]] = userData.data().data
+                }
+            }
+        }
+
         dispatch({type: 'SET_CONVO', payload: convoId})
         for(let i = 0; i < message.data().messages.length; i++) {
             const userId = message.data().messages[i].uid
-            const userData = await getDoc(doc(db, 'users', userId))
-            if(userData) {
-                messagesArr.push(
-                    {...message.data().messages[i], 
-                        image: userData.data().data.image,
-                        username: userData.data().data.username
-                    })
-            }
+
+            messagesArr.push(
+            {...message.data().messages[i], 
+                    image: users[userId].image,
+                    username: users[userId].username
+            })     
         }
         setMessages({
             id: message.id, 
             messages: messagesArr, 
+        })
+        await updateDoc(doc(db, 'rooms', convoId), {
+            read: true
         })
     }
 }
